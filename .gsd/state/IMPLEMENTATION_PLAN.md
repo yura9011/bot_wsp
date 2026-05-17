@@ -24,6 +24,10 @@
 >
 > **Santa Ana read-only mejora (2026-05-17)**: Maestro soporta `paths.stats` y `paths.pauses` absolutos. `santa-ana-prod` lee métricas desde `/home/forma/bot_dolce/data/estadisticas.json` y handoffs desde `/home/forma/bot_dolce/data/pausas.json`; ya no muestra archivos faltantes. WhatsApp muestra `running` cuando producción expone `isRunning=true` pero no `whatsapp.status`.
 >
+> **Fase 1 Santa Ana avance seguro (2026-05-17)**: backup manual productivo creado en `/home/forma/backups-prod/bot_dolce-pre-maestro-20260517-232344.tar.gz` y validado con `tar tzf`. Tamaño final `406900359 bytes`. No se reiniciaron ni modificaron procesos productivos; `bot-dolce-prd` y `dashboard-humano-santa-ana` siguieron online.
+>
+> **Asturias pendiente QR (2026-05-17)**: número real confirmado `5493513114575`. Por ahora queda pendiente sin escanear QR, sin levantar PM2 nuevo y sin activar operación comercial. Usará datos base compartidos con Santa Ana y catálogo `catalogs/catalogo-santa-ana.js` hasta nueva decisión.
+>
 > **Última sesión documentación (2026-05-17)**: Se documentó el modelo tenant (`TENANT_MODEL.md`), se creó checklist migración Santa Ana (`SANTA_ANA_MIGRATION_CHECKLIST.md`), y se diseñó config futura de ejemplo (`multi-tenant/clients/dolce-party.example.json`). Sin cambios de código, runtime ni producción.
 >
 > **Sesión anterior (2026-05-17)**: Persistencia JSON (audit events + mutes) implementada en `data/dashboard-maestro/`. UI testing con banner `Testing · demo only` y badges `Off en testing`. `_overrideInfo` agregado en payload de agentes.
@@ -168,6 +172,8 @@
 - [x] **Fase 0 — Precondiciones testing**: demo-local estable, backup-now probado, PM2 control probado, auditoría persistente, UI clara
 - [ ] **Fase 1 — Preparación producción**: backup manual `bot_dolce`, registrar PM2 y rutas, no modificar procesos
   - Progreso 2026-05-17: baseline read-only registrada. PM2 reales: `bot-dolce-prd`, `dashboard-humano-santa-ana`. HTTP `3001/index.html` y `3011/status` OK.
+  - Progreso 2026-05-17: backup manual productivo creado y validado: `/home/forma/backups-prod/bot_dolce-pre-maestro-20260517-232344.tar.gz` (`406900359 bytes`, `TAR_OK`).
+  - Progreso 2026-05-17: post-backup producción OK: `3011/status` `isRunning=true`, `3001/index.html` HTTP `200`, PM2 productivo online.
 - [ ] **Fase 2 — Alta Maestro read-only**: health checks y métricas Santa Ana desde Maestro, sin botones destructivos
   - Progreso 2026-05-17: Maestro testing lista `santa-ana-prod` como additionalAgent read-only desde `config/agents.override.json`.
   - Progreso 2026-05-17: health checks `3011/status` y dashboard `3001` OK; overall `ok`.
@@ -337,6 +343,7 @@ Fase 5: Testing (Local → Testing → Producción)
 - [x] **4.2 Crear data/asturias/** con historial.json, pausas.json, admin-numbers.json ✅ 2026-05-14
 - [x] **4.3 Configurar números admin de Asturias** (mismos que Santa Ana por defecto) ✅ 2026-05-14
 - [ ] **4.4 Escanear QR de Asturias** (sesión WhatsApp) — pendiente para testing
+  - Pendiente 2026-05-17: número real confirmado `5493513114575`; no escanear QR ni levantar operación hasta la semana de alta.
 - Commits: `bd76763`
 
 ### 🟢 Fase 5: Testing Pipeline (Prioridad Alta)

@@ -32,15 +32,20 @@ Todo esto debe estar completado en `bot_testing` antes de tocar producción:
 
 Antes de que el Maestro toque producción:
 
-- [ ] **Backup manual completo** de `bot_dolce`:
+- [x] **Backup manual completo** de `bot_dolce`:
   ```bash
   tar czf ~/backups-prod/bot_dolce-pre-maestro-$(date +%Y%m%d-%H%M%S).tar.gz \
     -C /home/forma bot_dolce
   ```
   Incluir: `data/`, `logs/`, `config/`, `.wwebjs_auth/`, `.env`, `package.json`, `node_modules/` (o solo lockfile).
   Guardar en `/home/forma/backups-prod/`.
+  - 2026-05-17: backup manual creado y validado:
+    `/home/forma/backups-prod/bot_dolce-pre-maestro-20260517-232344.tar.gz`.
+  - Tamaño final: `406900359 bytes` (~389 MB).
+  - Validación: `tar tzf ... >/dev/null` devolvió `TAR_OK`.
+  - Producción siguió online: `bot-dolce-prd` y `dashboard-humano-santa-ana`.
 
-- [ ] Registrar **nombres PM2 reales** de producción:
+- [x] Registrar **nombres PM2 reales** de producción:
   ```bash
   pm2 list
   pm2 describe bot-dolce-prd   # o el nombre real del bot Santa Ana
@@ -65,6 +70,7 @@ Antes de que el Maestro toque producción:
   - Pendiente: prueba manual de acciones internas (login/logout, envío humano, finish, config, stats).
 
 - [ ] **No modificar procesos ni config.** Esta fase es solo registro y backup.
+  - 2026-05-17: cumplido durante backup manual; no se reinició ni modificó producción.
 
 ---
 
@@ -131,7 +137,7 @@ El Maestro comienza a listar Santa Ana producción como agente observable:
 | Fase | Estado |
 |------|--------|
 | Fase 0 — Precondiciones testing | ✅ Cerrada para testing |
-| Fase 1 — Preparación producción | ⏳ Pendiente |
+| Fase 1 — Preparación producción | ⏳ Parcial: backup y PM2 registrados |
 | Fase 2 — Alta Maestro read-only | ✅ Completada |
 | Fase 3 — Backup desde Maestro | ⏳ Pendiente |
 | Fase 4 — Control PM2 producción | 🔒 Bloqueado hasta decisión explícita |

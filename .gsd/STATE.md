@@ -4,6 +4,17 @@
 
 ## Last Session Summary
 
+Sesión Fase 1 Santa Ana y Asturias pendiente:
+
+- Backup manual productivo de `/home/forma/bot_dolce` creado en `/home/forma/backups-prod/bot_dolce-pre-maestro-20260517-232344.tar.gz`.
+- Tamaño final: `406900359 bytes` (~389 MB).
+- Validación: `tar tzf` devolvió `TAR_OK`.
+- Producción quedó online después del backup: `bot-dolce-prd` online, `dashboard-humano-santa-ana` online, `3011/status` OK, `3001/index.html` HTTP `200`.
+- No se reiniciaron ni modificaron procesos productivos.
+- Asturias queda pendiente para la semana: número real `5493513114575`, QR pendiente, sin PM2 nuevo, sin operación comercial todavía. Por ahora usará datos base compartidos con Santa Ana y catálogo `catalogs/catalogo-santa-ana.js`.
+
+## Last Session Summary (anterior)
+
 Sesión cierre Fase 0 testing multi-tenant:
 
 - PM2 control real probado desde Dashboard Maestro en `bot_testing`.
@@ -143,7 +154,7 @@ Estado verificado en testing VPS el 2026-05-17:
 
 Pendientes inmediatos:
 
-1. Fase 1 Santa Ana: backup manual producción y registro final de rutas/PM2 sin modificar procesos.
+1. Fase 1 Santa Ana: completar registro final de rutas actuales; backup manual y PM2 ya quedaron validados.
 2. Mantener acceso por túnel SSH para MVP. No abrir puerto `4050` ni proxy reverso hasta decidir HTTPS/auth.
 3. Antes de escribir en producción: backup productivo, confirmación explícita y ventana controlada.
 4. Mejora futura opcional: crear PM2 separado para dashboard demo `5011` si se requiere reiniciarlo sin reiniciar `bot-demo-local`.
@@ -153,6 +164,7 @@ Avance local posterior:
 - Verificación read-only por SSH confirmó Maestro OK en loopback.
 - PM2 testing real usa nombres históricos; Dashboard Maestro mapea `demo-local.bot` a `bot-demo-local` con `processOverrides`.
 - `scripts/backup-testing.sh` fue usado para backup-now de `bot_testing` y quedó validado con backups timestamped en `/home/forma/backups-testing/`.
+- Backup productivo manual validado: `/home/forma/backups-prod/bot_dolce-pre-maestro-20260517-232344.tar.gz`.
 
 ## Last Session Summary (anterior)
 

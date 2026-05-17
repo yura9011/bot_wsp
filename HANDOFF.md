@@ -85,6 +85,7 @@ data/santa-ana/             ← Runtime data (NO EDITAR, está en .gitignore)
 - PM2 control está habilitado **solo en testing** y fue probado con `restart bot` sobre `demo-local`.
 - Producción sigue read-only desde Maestro; no habilitar PM2 control productivo.
 - Producción intacta. No se conectó Maestro a `bot_dolce`.
+- Backup manual productivo validado: `/home/forma/backups-prod/bot_dolce-pre-maestro-20260517-232344.tar.gz` (`406900359 bytes`, `TAR_OK`).
 
 ### agents.override.json — VPS testing
 
@@ -139,14 +140,15 @@ No incluir `dashboard`: ya se validó que el dashboard humano demo del puerto `5
 5. **Antes de tocar producción**
    - No conectar Maestro a `bot_dolce` todavía.
    - Testing ya tiene backup-now, PM2 control demo y audit persistente validados.
-   - Antes de escribir en producción: backup productivo manual, checklist Fase 1 y confirmación explícita.
+   - Backup productivo manual ya existe y fue validado; antes de escribir en producción sigue haciendo falta confirmación explícita y ventana controlada.
    - Backup-now testing ya tiene 3 ejecuciones exitosas: `bot_testing-20260517-183114.tar.gz`, `bot_testing-20260517-212752.tar.gz`, `bot_testing-20260517-212810.tar.gz`.
 
 ## 🚀 PRÓXIMOS PASOS (si no hay una tarea activa)
 
-1. **Santa Ana integración (Fase 1)**: backup manual producción y registro final de rutas/PM2 sin modificar procesos.
+1. **Santa Ana integración (Fase 1)**: completar registro final de rutas actuales; backup manual y PM2 ya están validados.
 2. **Dashboard Maestro**: mantener acceso por túnel SSH; no exponer puerto `4050` hasta decidir HTTPS/auth.
 3. **Mejora futura opcional**: crear PM2 separado para dashboard demo `5011` si se necesita reiniciarlo sin reiniciar `bot-demo-local`.
+4. **Asturias**: dejar pendiente hasta la semana de alta; número real `5493513114575`, QR pendiente, sin PM2 nuevo ni operación comercial todavía.
 
 ## 📐 Modelo Tenant — Documentado
 
@@ -182,6 +184,7 @@ Estado baseline Santa Ana 2026-05-17:
 - Captura usuario confirma panel visual cargado con `Chats`, `Config`, `Stats` y conversación abierta.
 - Pendiente prueba manual interna: login/logout, envío humano, finalizar conversación, config y stats.
 - Integración Maestro debe ser read-only primero: monitorear y enlazar el panel `3001`, no reemplazarlo.
+- Backup manual productivo validado: `/home/forma/backups-prod/bot_dolce-pre-maestro-20260517-232344.tar.gz`.
 
 Estado integración Maestro read-only 2026-05-17:
 - `dashboard-maestro-testing` lista agente adicional `santa-ana-prod`.
@@ -221,6 +224,14 @@ Implementación desplegada y probada en `bot_testing` VPS el 2026-05-17.
 - Deploy testing: copiados `flujos.js`, `lib/agent-manager.js` y `config/agents.json` a `/home/forma/bot_testing`; reiniciado solo `bot-demo-local`.
 - Verificación VPS: `node --check` OK, PM2 `bot-demo-local` online, `GET http://127.0.0.1:5010/status` responde `whatsapp.status: connected`.
 - Prueba manual WhatsApp OK con `11 7145-8944`: primer mensaje informa demo, segundo responde muestra y cierra, tercero indica demo finalizada.
+
+### asturias (pendiente alta)
+
+- Número real confirmado: `5493513114575`.
+- QR pendiente para la semana de alta; no escanear ahora.
+- No levantar PM2 nuevo ni activar operación comercial todavía.
+- Usar mismos datos base que Santa Ana por ahora: dirección `Sta. Ana 2637, X5010EEK Córdoba`, horarios y admins.
+- Catálogo compartido aceptado por ahora: `catalogs/catalogo-santa-ana.js`.
 
 ### Fix conocido: express.static en dashboard-humano-v2
 `dashboard-humano-v2/server.js` usa `path.join(__dirname, 'public')` en vez de `'public'` a secas. Si no, cuando el orquestador lanza el dashboard como proceso hijo, el cwd no es `dashboard-humano-v2/` y no encuentra la carpeta `public/`.
