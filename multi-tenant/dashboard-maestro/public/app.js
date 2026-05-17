@@ -48,14 +48,18 @@ function renderAgents(payload) {
   agentsBody.innerHTML = visibleAgents.map(agent => `
     <tr class="${agent.enabled ? '' : 'agent-disabled'}">
       <td><strong>${escapeHtml(agent.id)}</strong></td>
-      <td>${escapeHtml(agent.clientId || 'actual')}</td>
+      <td>
+        ${escapeHtml(agent.clientId || 'actual')}<br>
+        <span class="env-badge ${escapeHtml(agent.environment || 'testing')}">${escapeHtml(agent.environment || 'testing')}</span>
+        ${agent.readOnly ? '<span class="env-badge readonly">read-only</span>' : ''}
+      </td>
       <td>
         <strong>${escapeHtml(agent.name)}</strong><br>
         <span>${escapeHtml(agent.info.telefono || 'Sin teléfono')}</span>
       </td>
       <td>
         <span class="badge ${agent.enabled ? 'enabled' : 'disabled'}">
-          ${agent.enabled ? 'Sí' : 'No'}
+          ${agent.enabled ? 'Sí' : (agent._overrideInfo?.enabledOverridden ? 'Off en testing' : 'No')}
         </span>
       </td>
       <td>${renderHealth(agent.health && agent.health.botApi)}</td>
@@ -206,6 +210,13 @@ function renderActionsStatus() {
 function renderAgentActions(agent) {
   if (!agent.enabled) {
     return '<span class="muted">Deshabilitado en este entorno</span>';
+  }
+
+  if (agent.readOnly) {
+    const dashboardLink = agent.links?.dashboard
+      ? `<a class="panel-link" href="${escapeHtml(agent.links.dashboard)}" target="_blank" rel="noopener">Abrir panel</a>`
+      : '';
+    return `<span class="muted">Read-only</span>${dashboardLink}`;
   }
 
   const disabled = actionsConfig.enabled ? '' : 'disabled';

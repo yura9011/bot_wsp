@@ -51,13 +51,27 @@ DASHBOARD_MAESTRO_BACKUP_SCRIPT=scripts/backup-testing.sh
 ```
 
 - [ ] Confirmar nombres PM2 reales antes de habilitar control.
-- [ ] Declarar nombres PM2 reales en `config/agents.override.json` usando `processOverrides`.
-- [ ] Ejecutar una acción PM2 no crítica en testing.
-- [ ] Confirmar auditoría `success`.
-- [ ] Ejecutar backup-now en testing.
-- [ ] Confirmar archivo timestamped.
-- [ ] Confirmar que incluye runtime data y `.wwebjs_auth/`.
+- [x] Declarar nombres PM2 reales en `config/agents.override.json` usando `processOverrides`.
+  - 2026-05-17: `demo-local.bot = bot-demo-local`.
+  - 2026-05-17: dashboard demo no tiene PM2 separado; corre como hijo de `bot-demo-local` (`dashboard-humano-v2/server.js`, puerto 5011).
+- [x] Ejecutar una acción PM2 no crítica en testing.
+  - 2026-05-17: `restart dashboard` sobre `demo-local` probado como validación segura; no tocó procesos porque el target resuelto no existe (`dashboard-humano-demo-local-testing`).
+  - Resultado esperado actual: error auditado. Pendiente crear PM2 separado si se requiere restart de dashboard demo desde Maestro.
+- [x] Confirmar auditoría de acción PM2.
+  - 2026-05-17: evento auditado con `result: error` por target dashboard inexistente; esto confirma la ruta de auditoría sin afectar demo.
+- [x] Ejecutar backup-now en testing.
+  - 2026-05-17: backups exitosos adicionales `bot_testing-20260517-212752.tar.gz` y `bot_testing-20260517-212810.tar.gz`.
+- [x] Confirmar archivo timestamped.
+- [x] Confirmar que incluye runtime data y `.wwebjs_auth/`.
 - [ ] Confirmar que restore desde UI no existe.
+
+## Persistence checks
+
+- [x] Audit events persisten en `data/dashboard-maestro/audit-events.json`.
+  - 2026-05-17: backup-now y mute/unmute siguen visibles después de reiniciar `dashboard-maestro-testing`.
+- [x] Maintenance mutes persisten en `data/dashboard-maestro/maintenance-mutes.json`.
+  - 2026-05-17: mute de prueba `demo-local` sobrevivió reinicio de Maestro.
+  - 2026-05-17: mute de prueba removido después de validar; archivo quedó `[]`.
 
 ## Production guardrail
 

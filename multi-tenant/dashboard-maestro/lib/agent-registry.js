@@ -12,6 +12,8 @@ function normalizeAgent(agent, source) {
     clientId: agent.clientId || source.clientId || null,
     name: agent.name || agent.info?.nombre || agent.id,
     enabled: Boolean(agent.enabled),
+    environment: agent.environment || agent.entorno || 'testing',
+    readOnly: Boolean(agent.readOnly),
     whatsappSession: agent.whatsappSession || null,
     ports: {
       api: agent.ports?.api || null,
@@ -28,7 +30,11 @@ function normalizeAgent(agent, source) {
       horario: agent.info?.horario || null
     },
     pm2: agent.pm2 || null,
-    source
+    links: {
+      dashboard: agent.links?.dashboard || null
+    },
+    source,
+    _overrideInfo: agent._overrideInfo || null
   };
 }
 
@@ -42,8 +48,13 @@ function readAgents(configPath = process.env.AGENTS_CONFIG_PATH || DEFAULT_CONFI
     overridePath: overrides ? relativeToRepo(overridePath) : null
   };
   const rootAgents = readAgentsFromFile(configPath, rootSource, overrides);
+  const additionalAgents = readAdditionalAgents(overrides);
   const clientSources = readClientSources(process.env.CLIENTS_DIR || DEFAULT_CLIENTS_DIR);
-  const agents = [...rootAgents, ...clientSources.flatMap(source => readAgentsFromFile(source.fullPath, source))];
+  const agents = [
+    ...rootAgents,
+    ...additionalAgents,
+    ...clientSources.flatMap(source => readAgentsFromFile(source.fullPath, source))
+  ];
 
   return {
     source: relativeToRepo(configPath),
@@ -85,7 +96,12 @@ function applyAgentOverride(agent, overrides) {
           ...(agent.pm2 || {}),
           ...processOverride
         }
-      : agent.pm2
+      : agent.pm2,
+    _overrideInfo: {
+      enabledOverridden: typeof enabledOverride === 'boolean',
+      portsOverridden: !!portOverride,
+      processOverridden: !!processOverride
+    }
   };
 }
 
@@ -97,8 +113,21 @@ function readOverrides(overridePath) {
   return {
     enabledOverrides: parsed.enabledOverrides || null,
     portOverrides: parsed.portOverrides || null,
-    processOverrides: parsed.processOverrides || null
+    processOverrides: parsed.processOverrides || null,
+    additionalAgents: Array.isArray(parsed.additionalAgents) ? parsed.additionalAgents : []
   };
+}
+
+function readAdditionalAgents(overrides) {
+  if (!overrides?.additionalAgents?.length) return [];
+
+  const source = {
+    type: 'override-additional',
+    path: 'config/agents.override.json',
+    clientId: null
+  };
+
+  return overrides.additionalAgents.map(agent => normalizeAgent(agent, source));
 }
 
 function getDefaultOverridePath(configPath) {

@@ -37,6 +37,10 @@ function validateActionInput(agent, target, action) {
     return 'Agente no encontrado';
   }
 
+  if (agent.readOnly) {
+    return 'Agente read-only: acciones PM2 deshabilitadas';
+  }
+
   if (!ALLOWED_TARGETS.has(target)) {
     return 'Target no permitido';
   }

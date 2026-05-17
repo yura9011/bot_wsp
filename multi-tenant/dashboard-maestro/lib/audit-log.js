@@ -1,5 +1,39 @@
+const fs = require('fs');
+const path = require('path');
+
 const MAX_EVENTS = 200;
-const events = [];
+const DATA_FILE = path.resolve(__dirname, '..', '..', '..', 'data', 'dashboard-maestro', 'audit-events.json');
+let events = [];
+
+function loadEvents() {
+  try {
+    if (fs.existsSync(DATA_FILE)) {
+      const raw = fs.readFileSync(DATA_FILE, 'utf8');
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        events = parsed.slice(0, MAX_EVENTS);
+        return;
+      }
+    }
+  } catch (err) {
+    console.warn('audit-log: error loading persisted events, starting fresh:', err.message);
+  }
+  events = [];
+}
+
+function saveEvents() {
+  try {
+    const dir = path.dirname(DATA_FILE);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    fs.writeFileSync(DATA_FILE, JSON.stringify(events, null, 2), 'utf8');
+  } catch (err) {
+    console.warn('audit-log: error persisting events:', err.message);
+  }
+}
+
+loadEvents();
 
 function recordAuditEvent(event) {
   const entry = {
@@ -20,6 +54,8 @@ function recordAuditEvent(event) {
   if (events.length > MAX_EVENTS) {
     events.length = MAX_EVENTS;
   }
+
+  saveEvents();
 
   return entry;
 }

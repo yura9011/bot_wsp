@@ -46,6 +46,17 @@ p {
   margin: 0;
 }
 
+.testing-banner {
+  padding: 10px 32px;
+  background: #d97706;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
 h1 {
   font-size: 30px;
   font-weight: 700;
@@ -273,6 +284,30 @@ tr.agent-disabled td {
   background: var(--danger);
 }
 
+.env-badge {
+  display: inline-flex;
+  margin: 6px 6px 0 0;
+  padding: 3px 7px;
+  border-radius: 999px;
+  color: #ffffff;
+  background: #4b5563;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.env-badge.production {
+  background: var(--danger);
+}
+
+.env-badge.testing {
+  background: var(--warning);
+}
+
+.env-badge.readonly {
+  background: var(--surface-strong);
+}
+
 .health-cell {
   display: grid;
   gap: 5px;
@@ -343,6 +378,21 @@ tr.agent-disabled td {
   display: grid;
   grid-template-columns: 1fr;
   gap: 6px;
+}
+
+.panel-link {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 32px;
+  margin-top: 6px;
+  padding: 0 10px;
+  color: #ffffff;
+  background: var(--accent);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
 }
 
 .action-btn {
