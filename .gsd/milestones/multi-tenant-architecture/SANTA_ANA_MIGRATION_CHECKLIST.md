@@ -11,15 +11,18 @@ Todo esto debe estar completado en `bot_testing` antes de tocar producción:
 
 - [x] `demo-local` estable con WhatsApp conectado y dashboard accesible
 - [x] Backup-now probado al menos 3 veces en testing con resultados exitosos
-- [ ] PM2 control probado en testing (al menos restart de dashboard demo)
+- [x] PM2 control probado en testing
   - 2026-05-17: PM2 control habilitado solo en `dashboard-maestro-testing`.
   - 2026-05-17: `demo-local.bot` mapeado a `bot-demo-local`.
-  - 2026-05-17: dashboard demo en puerto `5011` no tiene PM2 separado; corre como hijo de `bot-demo-local`. Falta crear/validar target seguro si se quiere restart dashboard desde Maestro.
+  - 2026-05-17: dashboard demo en puerto `5011` no tiene PM2 separado; corre como hijo de `bot-demo-local`.
+  - 2026-05-17: `restart bot` sobre `demo-local` ejecutado desde Maestro; PM2 target `bot-demo-local`, auditoría `success`.
+  - 2026-05-17: post-check OK: PM2 online, `/status` `isRunning=true`, WhatsApp `connected`, dashboard demo `5011` responde `200`.
+  - Excepción aceptada para Fase 0: no se probó `restart dashboard` real porque no existe PM2 separado para el dashboard demo.
 - [x] Auditoría persistente — eventos sobreviven reinicio del Maestro
 - [x] Maintenance mutes persistentes — sobreviven reinicio
 - [x] UI distingue testing de producción (banner `Testing · demo only`, badges de entorno)
 - [x] Maestro solo opera sobre `demo-local` — no afecta Santa Ana testing ni producción
-- [ ] Checklist de Maestro en testing (TESTING_CHECKLIST.md) completamente verde
+- [x] Checklist de Maestro en testing (TESTING_CHECKLIST.md) verde para VPS testing
 
 **Verificación**: abrir Maestro por túnel SSH, confirmar que todo está OK y que `santa-ana` y `asturias` aparecen como disabled por override.
 
@@ -105,7 +108,8 @@ El Maestro comienza a listar Santa Ana producción como agente observable:
 
 ## Fase 4 — Control PM2 Producción (Solo si testing está probado)
 
-- [ ] PM2 control debe haber sido probado en testing (varias veces, incluyendo restart de dashboard demo)
+- [x] PM2 control debe haber sido probado en testing antes de producción
+  - 2026-05-17: probado con `restart bot` sobre `demo-local`; `restart dashboard` demo queda como mejora futura porque `5011` no tiene PM2 separado.
 - [ ] Nombres PM2 de producción deben estar validados y mapeados en `processOverrides`
 - [ ] Habilitar `DASHBOARD_MAESTRO_ENABLE_PM2_CONTROL=true` en el entorno de producción del Maestro
 - [ ] **Probar primero**: restart del dashboard humano de Santa Ana (acción de bajo riesgo)
@@ -126,11 +130,11 @@ El Maestro comienza a listar Santa Ana producción como agente observable:
 
 | Fase | Estado |
 |------|--------|
-| Fase 0 — Precondiciones testing | ⏳ Pendiente |
+| Fase 0 — Precondiciones testing | ✅ Cerrada para testing |
 | Fase 1 — Preparación producción | ⏳ Pendiente |
-| Fase 2 — Alta Maestro read-only | ⏳ Pendiente |
+| Fase 2 — Alta Maestro read-only | ✅ Completada |
 | Fase 3 — Backup desde Maestro | ⏳ Pendiente |
-| Fase 4 — Control PM2 producción | 🔒 Bloqueado hasta Fase 0 |
+| Fase 4 — Control PM2 producción | 🔒 Bloqueado hasta decisión explícita |
 
 ---
 

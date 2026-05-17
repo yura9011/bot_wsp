@@ -70,8 +70,8 @@ data/santa-ana/             ← Runtime data (NO EDITAR, está en .gitignore)
 
 Última actualización operativa: **2026-05-17**.
 
-- Rama local/remota: `main` sincronizada hasta `9371331`.
-- VPS testing: `/home/forma/bot_testing` actualizado a `9371331`.
+- Rama local/remota: `main` sincronizada hasta `26508f2`.
+- VPS testing: `/home/forma/bot_testing` actualizado a `26508f2`.
 - `dashboard-maestro-testing` online en puerto interno `4050`.
 - Testing activo real en Maestro: **solo `demo-local`**.
 - `santa-ana` y `asturias` están **disabled por `enabledOverrides`** en `/home/forma/bot_testing/config/agents.override.json`.
@@ -79,10 +79,11 @@ data/santa-ana/             ← Runtime data (NO EDITAR, está en .gitignore)
 - `bot-dolce-dev` stopped.
 - `bot-dolce-prd` online: **no tocar**.
 - Backup-now testing habilitado y probado.
-- Backup validado: `/home/forma/backups-testing/bot_testing-20260517-183114.tar.gz`.
+- Backups testing validados: `bot_testing-20260517-183114.tar.gz`, `bot_testing-20260517-212752.tar.gz`, `bot_testing-20260517-212810.tar.gz`, `bot_testing-20260517-224545.tar.gz`.
 - **Persistencia implementada**: audit events y maintenance mutes se guardan en `data/dashboard-maestro/` (JSON). Sobreviven reinicio del Maestro.
 - **UI testing actualizada**: banner `Testing · demo only` visible. Agentes disabled por override muestran badge `Off en testing`.
-- PM2 control sigue **deshabilitado**. Pendiente validación SSH del nombre PM2 del dashboard demo.
+- PM2 control está habilitado **solo en testing** y fue probado con `restart bot` sobre `demo-local`.
+- Producción sigue read-only desde Maestro; no habilitar PM2 control productivo.
 - Producción intacta. No se conectó Maestro a `bot_dolce`.
 
 ### agents.override.json — VPS testing
@@ -98,21 +99,23 @@ Para habilitar PM2 control, agregar `processOverrides` solo para `demo-local`:
 }
 ```
 
-No incluir `dashboard` todavía — requiere validación SSH para determinar el nombre PM2 real del dashboard humano del demo (puerto 5011). Buscar en `pm2 describe` qué proceso tiene `DASHBOARD_HUMANO_PORT=5011`, `DASHBOARD_AGENT_ID=demo-local` o `CONFIG_AGENT_ID=demo-local`. Si no existe un PM2 separado (el dashboard lo levanta el orquestador), no configurar target `dashboard`.
+No incluir `dashboard`: ya se validó que el dashboard humano demo del puerto `5011` corre como proceso hijo de `bot-demo-local`, no como PM2 separado.
 
-Validar con `pm2 list` y `pm2 describe <nombre>` antes de agregar. Solo después habilitar `DASHBOARD_MAESTRO_ENABLE_PM2_CONTROL=true` en testing.
+`DASHBOARD_MAESTRO_ENABLE_PM2_CONTROL=true` está habilitado solo en `dashboard-maestro-testing`.
 
 ### Próximas tareas seguras
 
-1. **PM2 control demo-only (pendiente SSH)**
+1. **PM2 control demo-only — COMPLETADO EN TESTING**
    - ✅ `processOverrides.demo-local` documentado con solo `bot: bot-demo-local`.
    - ✅ SSH a VPS testing: validado que `dashboard-dev` NO es dashboard humano demo; ejecuta `dashboard-central.js`.
    - ✅ Dashboard demo en puerto `5011` corre como proceso hijo de `bot-demo-local` (`dashboard-humano-v2/server.js`), sin PM2 separado.
    - ✅ `/home/forma/bot_testing/config/agents.override.json` tiene `processOverrides.demo-local.bot = bot-demo-local`.
    - ✅ `DASHBOARD_MAESTRO_ENABLE_PM2_CONTROL=true` habilitado solo en `dashboard-maestro-testing`.
-   - ⚠️ `dashboard:` queda sin configurar hasta crear/validar un PM2 separado para el dashboard demo.
+   - ⚠️ `dashboard:` queda sin configurar porque no existe PM2 separado para el dashboard demo.
    - ⚠️ Prueba `restart dashboard` sobre demo fue segura y auditada como error esperado: PM2 no encontró `dashboard-humano-demo-local-testing`.
-   - ❌ No probar `stop` ni `restart` del bot demo desde Maestro mientras pueda estar en uso comercial.
+   - ✅ Prueba real `restart bot` sobre `demo-local` ejecutada desde Maestro: PM2 target `bot-demo-local`, auditoría `success`.
+   - ✅ Post-check: `bot-demo-local` online, `/status` `isRunning=true`, WhatsApp `connected`, dashboard demo `5011` HTTP `200`.
+   - ❌ No probar `stop` sobre el bot demo mientras pueda estar en uso comercial.
 
 2. **Persistencia/auditoría — COMPLETADO**
    - ✅ Audit events persistidos en `data/dashboard-maestro/audit-events.json`.
@@ -131,18 +134,19 @@ Validar con `pm2 list` y `pm2 describe <nombre>` antes de agregar. Solo después
 4. **Exposición externa**
    - Para MVP interno, seguir con túnel SSH.
    - Opciones futuras: abrir puerto `4050`, o mejor proxy reverso con HTTPS y auth.
-   - No abrir exposición externa hasta cerrar PM2 control.
+   - No abrir exposición externa todavía; para MVP interno seguir por túnel SSH.
 
 5. **Antes de tocar producción**
    - No conectar Maestro a `bot_dolce` todavía.
-   - Primero completar: backup-now probado varias veces en testing, PM2 control probado solo en testing, audit persistente (✅) y checklist actualizado.
+   - Testing ya tiene backup-now, PM2 control demo y audit persistente validados.
+   - Antes de escribir en producción: backup productivo manual, checklist Fase 1 y confirmación explícita.
    - Backup-now testing ya tiene 3 ejecuciones exitosas: `bot_testing-20260517-183114.tar.gz`, `bot_testing-20260517-212752.tar.gz`, `bot_testing-20260517-212810.tar.gz`.
 
 ## 🚀 PRÓXIMOS PASOS (si no hay una tarea activa)
 
-1. **Dashboard Maestro**: SSH a VPS testing — validar nombre PM2 del dashboard demo, agregar a `agents.override.json`, habilitar PM2 control, probar restart demo dashboard.
-2. **Dashboard Maestro**: push a `main`, deploy a `bot_testing`, validar persistencia y UI en VPS.
-3. **Santa Ana integración (preparación)**: seguir checklist en `.gsd/milestones/multi-tenant-architecture/SANTA_ANA_MIGRATION_CHECKLIST.md`. Primero Fase 0 (precondiciones testing), luego Fase 1 (backup producción + registro).
+1. **Santa Ana integración (Fase 1)**: backup manual producción y registro final de rutas/PM2 sin modificar procesos.
+2. **Dashboard Maestro**: mantener acceso por túnel SSH; no exponer puerto `4050` hasta decidir HTTPS/auth.
+3. **Mejora futura opcional**: crear PM2 separado para dashboard demo `5011` si se necesita reiniciarlo sin reiniciar `bot-demo-local`.
 
 ## 📐 Modelo Tenant — Documentado
 
@@ -164,7 +168,7 @@ Ver `.gsd/milestones/multi-tenant-architecture/SANTA_ANA_MIGRATION_CHECKLIST.md`
 Baseline read-only actual: `.gsd/milestones/multi-tenant-architecture/SANTA_ANA_PRODUCTION_BASELINE.md`.
 
 Fases:
-- **Fase 0**: Precondiciones testing (demo-local estable, backup-now probado, PM2 control probado, auditoría persistente, UI testing clara)
+- **Fase 0**: ✅ Cerrada para testing (demo-local estable, backup-now probado, PM2 control demo probado, auditoría persistente, UI testing clara)
 - **Fase 1**: Preparación producción read-only (backup manual, registrar PM2 y rutas, no modificar)
 - **Fase 2**: Alta en Maestro read-only (health checks, métricas, sin botones destructivos)
 - **Fase 3**: Backup producción desde Maestro (habilitar backup-now solo producción, probar una vez)

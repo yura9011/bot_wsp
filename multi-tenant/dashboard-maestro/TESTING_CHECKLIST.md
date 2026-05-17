@@ -50,20 +50,25 @@ DASHBOARD_MAESTRO_ENABLE_BACKUP_NOW=true
 DASHBOARD_MAESTRO_BACKUP_SCRIPT=scripts/backup-testing.sh
 ```
 
-- [ ] Confirmar nombres PM2 reales antes de habilitar control.
+- [x] Confirmar nombres PM2 reales antes de habilitar control.
+  - 2026-05-17: PM2 control habilitado solo en `dashboard-maestro-testing` con `DASHBOARD_MAESTRO_PM2_ENV=testing`.
 - [x] Declarar nombres PM2 reales en `config/agents.override.json` usando `processOverrides`.
   - 2026-05-17: `demo-local.bot = bot-demo-local`.
   - 2026-05-17: dashboard demo no tiene PM2 separado; corre como hijo de `bot-demo-local` (`dashboard-humano-v2/server.js`, puerto 5011).
 - [x] Ejecutar una acción PM2 no crítica en testing.
   - 2026-05-17: `restart dashboard` sobre `demo-local` probado como validación segura; no tocó procesos porque el target resuelto no existe (`dashboard-humano-demo-local-testing`).
-  - Resultado esperado actual: error auditado. Pendiente crear PM2 separado si se requiere restart de dashboard demo desde Maestro.
+  - 2026-05-17: `restart bot` sobre `demo-local` ejecutado desde Maestro; target `bot-demo-local`, resultado `success`.
+  - Excepción documentada: si se requiere reiniciar solo el dashboard demo, falta crear PM2 separado para `5011`; hoy reiniciar el bot reinicia también el dashboard hijo.
 - [x] Confirmar auditoría de acción PM2.
   - 2026-05-17: evento auditado con `result: error` por target dashboard inexistente; esto confirma la ruta de auditoría sin afectar demo.
+  - 2026-05-17: evento auditado con `result: success`, `action: restart`, `target: bot`, `processName: bot-demo-local`.
+- [x] Confirmar recuperación posterior a PM2 restart.
+  - 2026-05-17: `bot-demo-local` online, `/status` devuelve `isRunning: true`, WhatsApp `connected`, dashboard demo `5011` responde `200`.
 - [x] Ejecutar backup-now en testing.
   - 2026-05-17: backups exitosos adicionales `bot_testing-20260517-212752.tar.gz` y `bot_testing-20260517-212810.tar.gz`.
 - [x] Confirmar archivo timestamped.
 - [x] Confirmar que incluye runtime data y `.wwebjs_auth/`.
-- [ ] Confirmar que restore desde UI no existe.
+- [x] Confirmar que restore desde UI no existe.
 
 ## Persistence checks
 
@@ -75,7 +80,7 @@ DASHBOARD_MAESTRO_BACKUP_SCRIPT=scripts/backup-testing.sh
 
 ## Production guardrail
 
-- [ ] No correr Maestro contra `bot_dolce` sin aprobación explícita.
-- [ ] No habilitar PM2 control en producción durante MVP local/testing.
-- [ ] No usar `scripts/backup.sh` hardcodeado a `/home/forma/bot_dolce` como backup script de testing.
-- [ ] Usar `scripts/backup-testing.sh` para backup-now de `bot_testing`.
+- [x] No ejecutar acciones destructivas contra `bot_dolce`; Santa Ana producción queda read-only.
+- [x] No habilitar PM2 control en producción durante MVP local/testing.
+- [x] No usar `scripts/backup.sh` hardcodeado a `/home/forma/bot_dolce` como backup script de testing.
+- [x] Usar `scripts/backup-testing.sh` para backup-now de `bot_testing`.

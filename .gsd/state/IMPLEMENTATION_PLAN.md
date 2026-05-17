@@ -16,6 +16,8 @@
 >
 > **Fase 0 testing avance crítico (2026-05-17)**: PM2 control habilitado solo en `dashboard-maestro-testing`; `demo-local.bot` mapeado a `bot-demo-local`; dashboard demo no tiene PM2 separado, corre como hijo de `bot-demo-local`, por eso no se configuró target `dashboard`. Backup-now testing ya tiene 3 ejecuciones exitosas. Auditoría y mutes persistentes validados tras reinicio de Maestro.
 >
+> **Fase 0 testing cerrada (2026-05-17)**: PM2 control real probado desde Maestro con `restart bot` sobre `demo-local`; target PM2 `bot-demo-local`, auditoría `success`. Post-check OK: `bot-demo-local` online, `/status` `isRunning=true`, WhatsApp `connected`, dashboard demo `5011` HTTP `200`. Excepción documentada: no existe PM2 separado para reiniciar solo el dashboard demo.
+>
 > **Baseline Santa Ana producción (2026-05-17)**: verificación read-only completada. `dashboard-humano-santa-ana` online en puerto `3001`, `bot-dolce-prd` online, `3011/status` responde `santa-ana isRunning=true`. Nuevo documento: `.gsd/milestones/multi-tenant-architecture/SANTA_ANA_PRODUCTION_BASELINE.md`.
 >
 > **Santa Ana read-only en Maestro (2026-05-17)**: `dashboard-maestro-testing` lista `santa-ana-prod` como `dolce-party / production / readOnly`. Health OK contra `3011` y `3001`. Acciones PM2 bloqueadas por `readOnly` y rechazo auditado. Producción intacta.
@@ -26,7 +28,7 @@
 >
 > **Sesión anterior (2026-05-17)**: Persistencia JSON (audit events + mutes) implementada en `data/dashboard-maestro/`. UI testing con banner `Testing · demo only` y badges `Off en testing`. `_overrideInfo` agregado en payload de agentes.
 >
-> **Último estado Dashboard Maestro (2026-05-17)**: `bot_testing` actualizado a `9371331`; PM2 `dashboard-maestro-testing` corre online en puerto interno 4050; testing activo real en Maestro es solo `demo-local`; `santa-ana` y `asturias` disabled por `enabledOverrides`; `bot-demo-local` online y WhatsApp connected; backup-now testing habilitado y probado; PM2 control sigue deshabilitado (pendiente SSH para validar nombre del dashboard demo); producción intacta.
+> **Estado Dashboard Maestro testing (2026-05-17)**: `bot_testing` actualizado a `26508f2`; PM2 `dashboard-maestro-testing` corre online en puerto interno 4050; testing activo real en Maestro es `demo-local` y Santa Ana producción aparece read-only como `santa-ana-prod`; `santa-ana` y `asturias` disabled por `enabledOverrides`; backup-now y PM2 control demo probados; producción intacta.
 
 ---
 
@@ -88,7 +90,9 @@
   - Progreso 2026-05-17: `/home/forma/bot_testing/config/agents.override.json` actualizado con `processOverrides.demo-local.bot = bot-demo-local`.
   - Progreso 2026-05-17: `DASHBOARD_MAESTRO_ENABLE_PM2_CONTROL=true` y `DASHBOARD_MAESTRO_PM2_ENV=testing` habilitados solo en `dashboard-maestro-testing`.
   - Progreso 2026-05-17: prueba segura `restart dashboard` contra `demo-local` auditada como error esperado porque no existe `dashboard-humano-demo-local-testing`; no afectó procesos reales.
-  - Pendiente: si se requiere restart dashboard demo desde Maestro, crear/validar un PM2 separado para el dashboard demo o agregar una capa explícita para controlar el proceso hijo sin tocar el bot.
+  - Progreso 2026-05-17: prueba real PM2 desde Maestro completada con `restart bot` contra `demo-local`; target `bot-demo-local`, resultado `success`, auditoría persistente.
+  - Progreso 2026-05-17: post-check PM2 OK: `bot-demo-local` online, `/status` `isRunning=true`, WhatsApp `connected`, dashboard demo `5011` HTTP `200`.
+  - Excepción: si se requiere reiniciar solo el dashboard demo desde Maestro, crear/validar un PM2 separado para `5011` o agregar una capa explícita para controlar el proceso hijo.
 
 - [ ] **2.5 Backup Now**
   - Crear backup timestamped en testing
@@ -132,6 +136,8 @@
   - ✅ Persistencia implementada: audit events en `data/dashboard-maestro/audit-events.json` y mutes en `data/dashboard-maestro/maintenance-mutes.json`. Carga en init, guarda en cada mutación. Defensivo: si JSON corrupto/missing, arranca vacío.
   - ✅ UI testing: banner `Testing · demo only` en cabecera. Badge `Off en testing` para agentes disabled por override. `_overrideInfo` en payload para que frontend distinga override vs disabled normal.
   - ✅ Persistencia validada en VPS: mute de prueba `demo-local` sobrevivió reinicio de `dashboard-maestro-testing`; luego fue removido y `maintenance-mutes.json` quedó `[]`. Audit events sobrevivieron reinicio.
+  - ✅ PM2 control testing validado con acción real de bajo riesgo: `restart bot` sobre `demo-local` vía Maestro. Producción siguió read-only e intacta.
+  - ✅ `TESTING_CHECKLIST.md` actualizado con la excepción del dashboard demo sin PM2 separado.
 
 ### Fuera de Alcance del MVP
 
@@ -159,7 +165,7 @@
 
 ### Fases del Checklist
 
-- [ ] **Fase 0 — Precondiciones testing**: demo-local estable, backup-now probado, PM2 control probado, auditoría persistente, UI clara
+- [x] **Fase 0 — Precondiciones testing**: demo-local estable, backup-now probado, PM2 control probado, auditoría persistente, UI clara
 - [ ] **Fase 1 — Preparación producción**: backup manual `bot_dolce`, registrar PM2 y rutas, no modificar procesos
   - Progreso 2026-05-17: baseline read-only registrada. PM2 reales: `bot-dolce-prd`, `dashboard-humano-santa-ana`. HTTP `3001/index.html` y `3011/status` OK.
 - [ ] **Fase 2 — Alta Maestro read-only**: health checks y métricas Santa Ana desde Maestro, sin botones destructivos
@@ -174,7 +180,7 @@
 
 - Santa Ana no se migra moviendo archivos. Se integra por referencia a sus rutas actuales.
 - No tocar `bot_dolce` runtime data.
-- PM2 control producción bloqueado hasta completar Fase 0.
+- PM2 control producción sigue bloqueado hasta decisión explícita, backup productivo y ventana controlada.
 - Nuevos clientes se gestionarán por script/config primero, luego por Maestro.
 
 ---
@@ -590,6 +596,6 @@ The multi-tenant implementation will be considered successful when:
 
 ---
 
-**Last Updated**: 2026-05-17  
-**Status**: Dashboard Maestro MVP — persistencia y UI testing completadas. PM2 control pendiente SSH. Documentación modelo tenant y checklist migración Santa Ana creadas.  
-**Next Milestone Review**: Completar Fase 0 de SANTA_ANA_MIGRATION_CHECKLIST.md (PM2 control probado en testing)
+**Last Updated**: 2026-05-17
+**Status**: Dashboard Maestro MVP — Fase 0 testing cerrada: persistencia, UI testing, backup-now y PM2 control demo validados. Santa Ana producción queda read-only.
+**Next Milestone Review**: Fase 1 de SANTA_ANA_MIGRATION_CHECKLIST.md (backup manual producción + registro sin modificar procesos)
