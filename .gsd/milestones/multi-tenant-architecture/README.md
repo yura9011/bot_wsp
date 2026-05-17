@@ -19,6 +19,7 @@ Read these first, in order:
 4. [TENANT_MODEL.md](./TENANT_MODEL.md) — tenant model (cliente → agente) for future multi-tenant structure.
 5. [SANTA_ANA_MIGRATION_CHECKLIST.md](./SANTA_ANA_MIGRATION_CHECKLIST.md) — phased checklist for integrating Santa Ana production into Maestro read-only.
 6. [SANTA_ANA_PRODUCTION_BASELINE.md](./SANTA_ANA_PRODUCTION_BASELINE.md) — read-only baseline of current Santa Ana production dashboard and bot.
+7. [ASTURIAS_ONBOARDING_RUNBOOK.md](./ASTURIAS_ONBOARDING_RUNBOOK.md) — operational checklist for the pending Asturias QR/onboarding.
 
 ## Historical Documents
 
@@ -44,4 +45,4 @@ Cliente -> Agente/Local -> WhatsApp session + data + dashboard humano
 
 ## Next Action
 
-Keep Santa Ana production read-only in Maestro. Next step is Fase 1: manual production backup and final route/PM2 registration without modifying production processes.
+Keep Santa Ana production read-only in Maestro. Asturias is pending QR/onboarding; follow `ASTURIAS_ONBOARDING_RUNBOOK.md` when the phone is available.

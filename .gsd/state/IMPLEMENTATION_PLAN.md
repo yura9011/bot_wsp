@@ -162,6 +162,7 @@
 - `.gsd/milestones/multi-tenant-architecture/TENANT_MODEL.md` — modelo `cliente -> agente`
 - `.gsd/milestones/multi-tenant-architecture/SANTA_ANA_MIGRATION_CHECKLIST.md` — checklist en 5 fases
 - `.gsd/milestones/multi-tenant-architecture/SANTA_ANA_PRODUCTION_BASELINE.md` — baseline read-only producción Santa Ana
+- `.gsd/milestones/multi-tenant-architecture/ASTURIAS_ONBOARDING_RUNBOOK.md` — runbook operativo para alta Asturias cuando esté disponible el QR
 - `multi-tenant/clients/README.md` — estructura futura explicada
 - `multi-tenant/clients/dolce-party.example.json` — ejemplo conceptual (no activo)
 
@@ -344,6 +345,7 @@ Fase 5: Testing (Local → Testing → Producción)
 - [x] **4.3 Configurar números admin de Asturias** (mismos que Santa Ana por defecto) ✅ 2026-05-14
 - [ ] **4.4 Escanear QR de Asturias** (sesión WhatsApp) — pendiente para testing
   - Pendiente 2026-05-17: número real confirmado `5493513114575`; no escanear QR ni levantar operación hasta la semana de alta.
+  - Pendiente 2026-05-17: seguir `.gsd/milestones/multi-tenant-architecture/ASTURIAS_ONBOARDING_RUNBOOK.md` para testing, producción y rollback.
 - Commits: `bd76763`
 
 ### 🟢 Fase 5: Testing Pipeline (Prioridad Alta)

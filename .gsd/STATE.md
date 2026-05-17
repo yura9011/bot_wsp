@@ -165,6 +165,7 @@ Avance local posterior:
 - PM2 testing real usa nombres históricos; Dashboard Maestro mapea `demo-local.bot` a `bot-demo-local` con `processOverrides`.
 - `scripts/backup-testing.sh` fue usado para backup-now de `bot_testing` y quedó validado con backups timestamped en `/home/forma/backups-testing/`.
 - Backup productivo manual validado: `/home/forma/backups-prod/bot_dolce-pre-maestro-20260517-232344.tar.gz`.
+- Runbook Asturias creado: `.gsd/milestones/multi-tenant-architecture/ASTURIAS_ONBOARDING_RUNBOOK.md`.
 
 ## Last Session Summary (anterior)
 

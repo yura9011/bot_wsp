@@ -149,6 +149,7 @@ No incluir `dashboard`: ya se validó que el dashboard humano demo del puerto `5
 2. **Dashboard Maestro**: mantener acceso por túnel SSH; no exponer puerto `4050` hasta decidir HTTPS/auth.
 3. **Mejora futura opcional**: crear PM2 separado para dashboard demo `5011` si se necesita reiniciarlo sin reiniciar `bot-demo-local`.
 4. **Asturias**: dejar pendiente hasta la semana de alta; número real `5493513114575`, QR pendiente, sin PM2 nuevo ni operación comercial todavía.
+   - Runbook operativo: `.gsd/milestones/multi-tenant-architecture/ASTURIAS_ONBOARDING_RUNBOOK.md`.
 
 ## 📐 Modelo Tenant — Documentado
 
@@ -232,6 +233,7 @@ Implementación desplegada y probada en `bot_testing` VPS el 2026-05-17.
 - No levantar PM2 nuevo ni activar operación comercial todavía.
 - Usar mismos datos base que Santa Ana por ahora: dirección `Sta. Ana 2637, X5010EEK Córdoba`, horarios y admins.
 - Catálogo compartido aceptado por ahora: `catalogs/catalogo-santa-ana.js`.
+- Runbook de alta: `.gsd/milestones/multi-tenant-architecture/ASTURIAS_ONBOARDING_RUNBOOK.md`.
 
 ### Fix conocido: express.static en dashboard-humano-v2
 `dashboard-humano-v2/server.js` usa `path.join(__dirname, 'public')` en vez de `'public'` a secas. Si no, cuando el orquestador lanza el dashboard como proceso hijo, el cwd no es `dashboard-humano-v2/` y no encuentra la carpeta `public/`.
