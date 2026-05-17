@@ -189,6 +189,35 @@ function getMensajeNoEntiendo() {
   return `Disculpá, no entendí tu respuesta. Por favor, elegí una de las opciones del menú usando el número correspondiente.`;
 }
 
+function getMensajeDemoInicial() {
+  return `¡Hola! 👋
+
+Estás hablando con una *demo del sistema de atención por WhatsApp*.
+
+No es una tienda real y no toma pedidos. La idea es mostrar, en una interacción corta, cómo el bot puede recibir una consulta, responder con contexto y derivar a una persona cuando hace falta.
+
+Escribí una consulta de ejemplo, por ejemplo:
+• Quiero saber si tienen stock de un producto
+• Necesito hablar con una persona
+• Quiero consultar horarios o entregas`;
+}
+
+function getMensajeDemoRespuesta() {
+  return `Gracias. Esta sería una respuesta automática de muestra:
+
+Puedo entender la consulta, pedir datos si faltan y dejar el caso listo para que una persona continúe desde el panel humano.
+
+Para esta demo dejamos la interacción acá, así evitamos simular una operación real.
+
+Si querés ver otro caso, podemos reiniciar el recorrido desde el panel o preparar una demo específica para tu negocio.`;
+}
+
+function getMensajeDemoFinalizado() {
+  return `La demo corta ya finalizó.
+
+Este número está configurado solo para mostrar el funcionamiento del sistema. Para otra prueba, podemos reiniciar el recorrido o preparar un flujo demo específico.`;
+}
+
 // ─── ESTADOS DEL FLUJO ───────────────────────────────────────────────────────
 
 const ESTADOS = {
@@ -202,6 +231,8 @@ const ESTADOS = {
   INFO_ANDREANI: "info_andreani",
   INFO_MERCADOLIBRE: "info_mercadolibre",
   PEDIDO: "pedido",
+  DEMO_ESPERANDO_CONSULTA: "demo_esperando_consulta",
+  DEMO_FINALIZADO: "demo_finalizado",
 };
 
 module.exports = {
@@ -218,4 +249,7 @@ module.exports = {
   getInfoMercadoLibre,
   getMensajePedirNombre,
   getMensajeNoEntiendo,
+  getMensajeDemoInicial,
+  getMensajeDemoRespuesta,
+  getMensajeDemoFinalizado,
 };
