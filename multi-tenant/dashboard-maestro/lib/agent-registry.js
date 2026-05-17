@@ -22,7 +22,9 @@ function normalizeAgent(agent, source) {
     paths: {
       data: agent.paths?.data || null,
       logs: agent.paths?.logs || null,
-      catalog: agent.paths?.catalog || null
+      catalog: agent.paths?.catalog || null,
+      stats: agent.paths?.stats || null,
+      pauses: agent.paths?.pauses || null
     },
     info: {
       telefono: agent.info?.telefono || null,

@@ -152,7 +152,9 @@ function renderWhatsapp(whatsapp) {
     ? 'up'
     : ['disconnected', 'auth_failure'].includes(whatsapp.status)
       ? 'down'
-      : whatsapp.status === 'disabled'
+      : whatsapp.status === 'running'
+        ? 'up'
+        : whatsapp.status === 'disabled'
         ? 'disabled'
         : 'unknown';
   return `

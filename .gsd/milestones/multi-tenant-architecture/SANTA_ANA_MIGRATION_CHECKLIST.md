@@ -73,7 +73,9 @@ El Maestro comienza a listar Santa Ana producción como agente observable:
   - 2026-05-17: listado como `additionalAgent` en `config/agents.override.json` con id `santa-ana-prod`.
 - [x] Health check a bot API de Santa Ana (puerto 3011) funciona desde testing VPS
 - [x] Health check a dashboard humano de Santa Ana (puerto 3001) funciona
-- [ ] Métricas read-only (`estadisticas.json`) se muestran correctamente
+- [x] Métricas read-only (`estadisticas.json`) se muestran correctamente
+  - 2026-05-17: Maestro lee `/home/forma/bot_dolce/data/estadisticas.json` mediante `paths.stats`.
+  - Valores actuales en 0 porque el archivo productivo no tiene actividad de hoy.
 - [x] Sin botones destructivos habilitados (stop, start, restart)
   - 2026-05-17: `readOnly=true` bloquea acciones PM2 en backend.
 - [x] Sin PM2 control habilitado para Santa Ana

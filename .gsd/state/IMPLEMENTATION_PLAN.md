@@ -20,6 +20,8 @@
 >
 > **Santa Ana read-only en Maestro (2026-05-17)**: `dashboard-maestro-testing` lista `santa-ana-prod` como `dolce-party / production / readOnly`. Health OK contra `3011` y `3001`. Acciones PM2 bloqueadas por `readOnly` y rechazo auditado. Producción intacta.
 >
+> **Santa Ana read-only mejora (2026-05-17)**: Maestro soporta `paths.stats` y `paths.pauses` absolutos. `santa-ana-prod` lee métricas desde `/home/forma/bot_dolce/data/estadisticas.json` y handoffs desde `/home/forma/bot_dolce/data/pausas.json`; ya no muestra archivos faltantes. WhatsApp muestra `running` cuando producción expone `isRunning=true` pero no `whatsapp.status`.
+>
 > **Última sesión documentación (2026-05-17)**: Se documentó el modelo tenant (`TENANT_MODEL.md`), se creó checklist migración Santa Ana (`SANTA_ANA_MIGRATION_CHECKLIST.md`), y se diseñó config futura de ejemplo (`multi-tenant/clients/dolce-party.example.json`). Sin cambios de código, runtime ni producción.
 >
 > **Sesión anterior (2026-05-17)**: Persistencia JSON (audit events + mutes) implementada en `data/dashboard-maestro/`. UI testing con banner `Testing · demo only` y badges `Off en testing`. `_overrideInfo` agregado en payload de agentes.
@@ -164,6 +166,7 @@
   - Progreso 2026-05-17: Maestro testing lista `santa-ana-prod` como additionalAgent read-only desde `config/agents.override.json`.
   - Progreso 2026-05-17: health checks `3011/status` y dashboard `3001` OK; overall `ok`.
   - Progreso 2026-05-17: acciones PM2 bloqueadas por `readOnly`; prueba `restart dashboard` rechazada y auditada sin tocar procesos.
+  - Progreso 2026-05-17: métricas y handoffs read-only leen archivos absolutos configurados en `paths.stats` y `paths.pauses`.
 - [ ] **Fase 3 — Backup desde Maestro**: habilitar backup-now solo producción, probar una vez
 - [ ] **Fase 4 — Control PM2 producción**: solo si testing probado, empezar por restart dashboard
 

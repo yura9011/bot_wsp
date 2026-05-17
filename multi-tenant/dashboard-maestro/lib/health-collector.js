@@ -122,6 +122,13 @@ function parseWhatsappStatus(statusBody) {
     };
   }
 
+  if (statusBody.isRunning === true) {
+    return {
+      status: 'running',
+      detail: 'Bot activo; WhatsApp no expuesto por /status'
+    };
+  }
+
   return { status: 'unknown', detail: 'No expuesto por /status' };
 }
 

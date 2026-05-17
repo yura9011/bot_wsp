@@ -4,9 +4,7 @@ const path = require('path');
 const REPO_ROOT = path.resolve(__dirname, '..', '..', '..');
 
 function collectAgentMetrics(agent) {
-  const statsPath = agent.paths?.data
-    ? path.resolve(REPO_ROOT, agent.paths.data, 'estadisticas.json')
-    : null;
+  const statsPath = resolveStatsPath(agent);
 
   if (!statsPath || !fs.existsSync(statsPath)) {
     return emptyMetrics('estadisticas.json no encontrado');
@@ -18,6 +16,18 @@ function collectAgentMetrics(agent) {
   } catch (error) {
     return emptyMetrics(error.message);
   }
+}
+
+function resolveStatsPath(agent) {
+  if (agent.paths?.stats) {
+    return path.resolve(REPO_ROOT, agent.paths.stats);
+  }
+
+  if (agent.paths?.data) {
+    return path.resolve(REPO_ROOT, agent.paths.data, 'estadisticas.json');
+  }
+
+  return null;
 }
 
 function collectAgentsMetrics(agents) {

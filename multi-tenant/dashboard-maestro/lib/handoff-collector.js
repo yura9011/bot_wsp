@@ -5,9 +5,7 @@ const REPO_ROOT = path.resolve(__dirname, '..', '..', '..');
 const CRITICAL_WAIT_MS = 10 * 60 * 1000;
 
 function collectAgentHandoffs(agent) {
-  const pausasPath = agent.paths?.data
-    ? path.resolve(REPO_ROOT, agent.paths.data, 'pausas.json')
-    : null;
+  const pausasPath = resolvePausasPath(agent);
 
   if (!pausasPath || !fs.existsSync(pausasPath)) {
     return emptyHandoffs('pausas.json no encontrado');
@@ -38,6 +36,18 @@ function collectAgentHandoffs(agent) {
   } catch (error) {
     return emptyHandoffs(error.message);
   }
+}
+
+function resolvePausasPath(agent) {
+  if (agent.paths?.pauses) {
+    return path.resolve(REPO_ROOT, agent.paths.pauses);
+  }
+
+  if (agent.paths?.data) {
+    return path.resolve(REPO_ROOT, agent.paths.data, 'pausas.json');
+  }
+
+  return null;
 }
 
 function collectAgentsHandoffs(agents) {

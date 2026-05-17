@@ -187,6 +187,10 @@ Estado integración Maestro read-only 2026-05-17:
 - PM2 names registrados solo para referencia: `bot-dolce-prd`, `dashboard-humano-santa-ana`.
 - Acciones PM2 bloqueadas por código para read-only. Prueba `restart dashboard` fue rechazada con `Agente read-only: acciones PM2 deshabilitadas` y quedó auditada.
 - Producción intacta: `bot-dolce-prd` y `dashboard-humano-santa-ana` siguieron online.
+- Mejora read-only posterior: Maestro soporta `paths.stats` y `paths.pauses` para leer archivos absolutos de producción sin cambiar `data`.
+- `santa-ana-prod` en VPS testing apunta `stats` a `/home/forma/bot_dolce/data/estadisticas.json` y `pauses` a `/home/forma/bot_dolce/data/pausas.json`.
+- Métricas y handoffs ya no muestran “archivo no encontrado”; quedan en 0 porque los archivos actuales no tienen actividad de hoy.
+- WhatsApp de producción ahora muestra `running` con detalle `Bot activo; WhatsApp no expuesto por /status` en vez de `unknown`.
 
 ---
 

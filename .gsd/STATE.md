@@ -4,6 +4,18 @@
 
 ## Last Session Summary
 
+Sesión mejora read-only Santa Ana:
+
+- Maestro ahora soporta `paths.stats` y `paths.pauses` para agentes read-only con archivos absolutos.
+- En VPS testing, `santa-ana-prod` lee:
+  - stats: `/home/forma/bot_dolce/data/estadisticas.json`
+  - pauses: `/home/forma/bot_dolce/data/pausas.json`
+- Métricas y handoffs de `santa-ana-prod` ya no muestran archivo no encontrado.
+- Como `/status` de producción no expone `whatsapp.status`, Maestro muestra `running` cuando `isRunning=true`.
+- Producción intacta; solo lectura desde Maestro.
+
+## Last Session Summary (anterior)
+
 Sesión integración Santa Ana read-only en Maestro:
 
 - Dashboard Maestro testing ahora soporta `additionalAgents` en `config/agents.override.json`.
