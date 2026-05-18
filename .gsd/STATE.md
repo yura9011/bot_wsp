@@ -4,6 +4,19 @@
 
 ## Last Session Summary
 
+Sesión preparación backup Maestro, onboarding y exposición:
+
+- `scripts/backup-production.sh` agregado para backup productivo desde Maestro con guardrails:
+  - solo acepta `PROD_DIR=/home/forma/bot_dolce`
+  - guarda en `/home/forma/backups-prod`
+  - valida el `.tar.gz` con `tar -tzf`
+  - no está habilitado por env ni ejecutado desde Maestro.
+- Checklist reusable agregado: `.gsd/milestones/multi-tenant-architecture/AGENT_ONBOARDING_CHECKLIST.md`.
+- Plan de exposición segura agregado: `.gsd/milestones/multi-tenant-architecture/MAESTRO_EXPOSURE_PLAN.md`.
+- Pendiente para exponer Maestro: dominio/subdominio, usuarios autorizados y decisión de auth.
+
+## Last Session Summary (anterior)
+
 Sesión Maestro pending QR:
 
 - Dashboard Maestro soporta `statusOverrides` en `config/agents.override.json`.

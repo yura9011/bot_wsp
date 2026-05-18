@@ -20,6 +20,8 @@ Read these first, in order:
 5. [SANTA_ANA_MIGRATION_CHECKLIST.md](./SANTA_ANA_MIGRATION_CHECKLIST.md) — phased checklist for integrating Santa Ana production into Maestro read-only.
 6. [SANTA_ANA_PRODUCTION_BASELINE.md](./SANTA_ANA_PRODUCTION_BASELINE.md) — read-only baseline of current Santa Ana production dashboard and bot.
 7. [ASTURIAS_ONBOARDING_RUNBOOK.md](./ASTURIAS_ONBOARDING_RUNBOOK.md) — operational checklist for the pending Asturias QR/onboarding.
+8. [AGENT_ONBOARDING_CHECKLIST.md](./AGENT_ONBOARDING_CHECKLIST.md) — reusable checklist for future agents/clients.
+9. [MAESTRO_EXPOSURE_PLAN.md](./MAESTRO_EXPOSURE_PLAN.md) — HTTPS/reverse-proxy plan before exposing Maestro externally.
 
 ## Historical Documents
 
@@ -45,4 +47,4 @@ Cliente -> Agente/Local -> WhatsApp session + data + dashboard humano
 
 ## Next Action
 
-Keep Santa Ana production read-only in Maestro. Asturias is pending QR/onboarding; follow `ASTURIAS_ONBOARDING_RUNBOOK.md` when the phone is available.
+Keep Santa Ana production read-only in Maestro. Asturias is pending QR/onboarding; follow `ASTURIAS_ONBOARDING_RUNBOOK.md` when the phone is available. Maestro exposure needs domain/subdomain before implementation.

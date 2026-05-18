@@ -32,6 +32,8 @@
 >
 > **Maestro pending QR (2026-05-18)**: Dashboard Maestro soporta `statusOverrides` para mostrar agentes en preparación. `asturias` debe quedar como `pending-qr` en testing hasta escanear QR; no genera health real ni alertas.
 >
+> **Backup/Onboarding/Exposición preparados (2026-05-18)**: se agregó `scripts/backup-production.sh` para backup productivo desde Maestro con guardrails, pero queda deshabilitado por env hasta confirmación explícita. Se agregó checklist reusable de onboarding y plan de exposición HTTPS del Maestro; falta dominio/subdominio para ejecutar exposición.
+>
 > **Última sesión documentación (2026-05-17)**: Se documentó el modelo tenant (`TENANT_MODEL.md`), se creó checklist migración Santa Ana (`SANTA_ANA_MIGRATION_CHECKLIST.md`), y se diseñó config futura de ejemplo (`multi-tenant/clients/dolce-party.example.json`). Sin cambios de código, runtime ni producción.
 >
 > **Sesión anterior (2026-05-17)**: Persistencia JSON (audit events + mutes) implementada en `data/dashboard-maestro/`. UI testing con banner `Testing · demo only` y badges `Off en testing`. `_overrideInfo` agregado en payload de agentes.
@@ -167,6 +169,8 @@
 - `.gsd/milestones/multi-tenant-architecture/SANTA_ANA_MIGRATION_CHECKLIST.md` — checklist en 5 fases
 - `.gsd/milestones/multi-tenant-architecture/SANTA_ANA_PRODUCTION_BASELINE.md` — baseline read-only producción Santa Ana
 - `.gsd/milestones/multi-tenant-architecture/ASTURIAS_ONBOARDING_RUNBOOK.md` — runbook operativo para alta Asturias cuando esté disponible el QR
+- `.gsd/milestones/multi-tenant-architecture/AGENT_ONBOARDING_CHECKLIST.md` — checklist reusable para futuros agentes/clientes
+- `.gsd/milestones/multi-tenant-architecture/MAESTRO_EXPOSURE_PLAN.md` — plan de exposición segura con HTTPS/auth
 - `multi-tenant/clients/README.md` — estructura futura explicada
 - `multi-tenant/clients/dolce-party.example.json` — ejemplo conceptual (no activo)
 
@@ -186,6 +190,7 @@
   - Progreso 2026-05-17: acciones PM2 bloqueadas por `readOnly`; prueba `restart dashboard` rechazada y auditada sin tocar procesos.
   - Progreso 2026-05-17: métricas y handoffs read-only leen archivos absolutos configurados en `paths.stats` y `paths.pauses`.
 - [ ] **Fase 3 — Backup desde Maestro**: habilitar backup-now solo producción, probar una vez
+  - Progreso 2026-05-18: creado `scripts/backup-production.sh` con guardrails para `/home/forma/bot_dolce`; no está habilitado en Maestro ni ejecutado desde UI.
 - [ ] **Fase 4 — Control PM2 producción**: solo si testing probado, empezar por restart dashboard
 
 ### Reglas
