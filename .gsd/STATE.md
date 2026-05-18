@@ -4,6 +4,17 @@
 
 ## Last Session Summary
 
+Sesión LLM provider OpenRouter:
+
+- Se agregó selector `LLM_PROVIDER=gemini|openrouter`.
+- OpenRouter puede ser proveedor principal con `OPENROUTER_API_KEY` y `OPENROUTER_MODEL`.
+- Gemini deja de ser obligatorio si `LLM_PROVIDER=openrouter`.
+- `agent-manager` usa `generarRespuestaLLM(history, texto)` y ya no depende de `chat.startChat()` directamente.
+- `validation.js` valida la API key según provider.
+- Para testing/demo se recomienda `LLM_PROVIDER=openrouter` con modelo free, manteniendo producción sin cambio hasta prueba.
+
+## Last Session Summary (anterior)
+
 Sesión audio/transcripción inicial:
 
 - Se preparó soporte opcional para transcribir audios de WhatsApp con transcriptor local CPU-only en el VPS.

@@ -40,6 +40,8 @@
 >
 > **Audio WhatsApp inicial (2026-05-18)**: soporte opcional de transcripción local CPU-only agregado detrás de `ENABLE_AUDIO_TRANSCRIPTION=true`, `AUDIO_TRANSCRIPTION_PROVIDER=local` y `AUDIO_TRANSCRIPTION_COMMAND`. Sin flag/comando, el bot mantiene respuesta de pedir texto. Handoff se chequea antes de responder texto o media. Imágenes/videos/documentos/stickers siguen pidiendo texto.
 >
+> **LLM provider OpenRouter (2026-05-18)**: se agregó `LLM_PROVIDER=gemini|openrouter`. OpenRouter puede ser proveedor principal con `OPENROUTER_API_KEY` y `OPENROUTER_MODEL`; Gemini deja de ser obligatorio cuando `LLM_PROVIDER=openrouter`. Pendiente probar primero en `demo-local`.
+>
 > **Última sesión documentación (2026-05-17)**: Se documentó el modelo tenant (`TENANT_MODEL.md`), se creó checklist migración Santa Ana (`SANTA_ANA_MIGRATION_CHECKLIST.md`), y se diseñó config futura de ejemplo (`multi-tenant/clients/dolce-party.example.json`). Sin cambios de código, runtime ni producción.
 >
 > **Sesión anterior (2026-05-17)**: Persistencia JSON (audit events + mutes) implementada en `data/dashboard-maestro/`. UI testing con banner `Testing · demo only` y badges `Off en testing`. `_overrideInfo` agregado en payload de agentes.
