@@ -4,6 +4,15 @@
 
 ## Last Session Summary
 
+Sesión Maestro pending QR:
+
+- Dashboard Maestro soporta `statusOverrides` en `config/agents.override.json`.
+- Estado `pending-qr` muestra el agente como pendiente de escaneo QR, sin health real, sin acciones y sin alertas.
+- Uso previsto inmediato: `asturias` queda visible como pendiente QR en testing hasta la semana de alta.
+- Para iniciar alta real, quitar `statusOverrides.asturias = "pending-qr"` y habilitar el agente solo durante la prueba/QR.
+
+## Last Session Summary (anterior)
+
 Sesión preconfig Asturias y cierre rutas Fase 1:
 
 - Rutas productivas Santa Ana registradas por SSH read-only:

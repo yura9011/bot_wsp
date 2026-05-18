@@ -7,11 +7,14 @@ const DEFAULT_OVERRIDE_PATH = path.resolve(__dirname, '..', '..', '..', 'config'
 const DEFAULT_CLIENTS_DIR = path.resolve(__dirname, '..', '..', 'clients');
 
 function normalizeAgent(agent, source) {
+  const status = agent.status || agent.operationalStatus || (agent.enabled ? 'active' : 'disabled');
+
   return {
     id: agent.id,
     clientId: agent.clientId || source.clientId || null,
     name: agent.name || agent.info?.nombre || agent.id,
     enabled: Boolean(agent.enabled),
+    status,
     environment: agent.environment || agent.entorno || 'testing',
     readOnly: Boolean(agent.readOnly),
     whatsappSession: agent.whatsappSession || null,
@@ -84,11 +87,13 @@ function applyAgentOverride(agent, overrides) {
   const portOverride = overrides?.portOverrides?.[agent.id];
   const processOverride = overrides?.processOverrides?.[agent.id];
   const enabledOverride = overrides?.enabledOverrides?.[agent.id];
-  if (!portOverride && !processOverride && typeof enabledOverride !== 'boolean') return agent;
+  const statusOverride = overrides?.statusOverrides?.[agent.id];
+  if (!portOverride && !processOverride && typeof enabledOverride !== 'boolean' && !statusOverride) return agent;
 
   return {
     ...agent,
     enabled: typeof enabledOverride === 'boolean' ? enabledOverride : agent.enabled,
+    status: statusOverride || agent.status,
     ports: {
       ...(agent.ports || {}),
       ...(portOverride || {})
@@ -102,7 +107,8 @@ function applyAgentOverride(agent, overrides) {
     _overrideInfo: {
       enabledOverridden: typeof enabledOverride === 'boolean',
       portsOverridden: !!portOverride,
-      processOverridden: !!processOverride
+      processOverridden: !!processOverride,
+      statusOverridden: !!statusOverride
     }
   };
 }
@@ -116,6 +122,7 @@ function readOverrides(overridePath) {
     enabledOverrides: parsed.enabledOverrides || null,
     portOverrides: parsed.portOverrides || null,
     processOverrides: parsed.processOverrides || null,
+    statusOverrides: parsed.statusOverrides || null,
     additionalAgents: Array.isArray(parsed.additionalAgents) ? parsed.additionalAgents : []
   };
 }

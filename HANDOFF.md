@@ -83,6 +83,7 @@ data/santa-ana/             ← Runtime data (NO EDITAR, está en .gitignore)
 - **Persistencia implementada**: audit events y maintenance mutes se guardan en `data/dashboard-maestro/` (JSON). Sobreviven reinicio del Maestro.
 - **UI testing actualizada**: banner `Testing · demo only` visible. Agentes disabled por override muestran badge `Off en testing`.
 - PM2 control está habilitado **solo en testing** y fue probado con `restart bot` sobre `demo-local`.
+- Maestro soporta estado `pending-qr` por `statusOverrides`; usarlo para agentes preparados pero sin WhatsApp escaneado.
 - Producción sigue read-only desde Maestro; no habilitar PM2 control productivo.
 - Producción intacta. No se conectó Maestro a `bot_dolce`.
 - Backup manual productivo validado: `/home/forma/backups-prod/bot_dolce-pre-maestro-20260517-232344.tar.gz` (`406900359 bytes`, `TAR_OK`).
@@ -239,6 +240,7 @@ Implementación desplegada y probada en `bot_testing` VPS el 2026-05-17.
 - Usar mismos datos base que Santa Ana por ahora: dirección `Sta. Ana 2637, X5010EEK Córdoba`, horarios y admins.
 - Catálogo compartido aceptado por ahora: `catalogs/catalogo-santa-ana.js`.
 - `config/agents.json` ya está preconfigurado con teléfono real y dirección base.
+- Maestro debe mostrarlo como `pending-qr` en testing hasta escanear QR.
 - Runbook de alta: `.gsd/milestones/multi-tenant-architecture/ASTURIAS_ONBOARDING_RUNBOOK.md`.
 
 ### Fix conocido: express.static en dashboard-humano-v2

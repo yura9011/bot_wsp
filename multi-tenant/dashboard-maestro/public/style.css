@@ -264,6 +264,14 @@ tr.agent-disabled td {
   color: var(--muted);
 }
 
+tr.agent-pending {
+  background: #fff7ed;
+}
+
+tr.agent-pending td {
+  color: var(--text);
+}
+
 .badge {
   display: inline-flex;
   align-items: center;
@@ -282,6 +290,10 @@ tr.agent-disabled td {
 
 .badge.disabled {
   background: var(--danger);
+}
+
+.badge.pending-qr {
+  background: var(--warning);
 }
 
 .env-badge {
@@ -306,6 +318,10 @@ tr.agent-disabled td {
 
 .env-badge.readonly {
   background: var(--surface-strong);
+}
+
+.env-badge.pending-qr {
+  background: #92400e;
 }
 
 .health-cell {
@@ -342,6 +358,10 @@ tr.agent-disabled td {
 
 .health.disabled {
   background: #6b7280;
+}
+
+.health.pending-qr {
+  background: var(--warning);
 }
 
 .metrics-grid {

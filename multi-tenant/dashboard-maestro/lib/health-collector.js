@@ -58,6 +58,15 @@ async function checkHttp(url, options = {}) {
 }
 
 async function collectAgentHealth(agent) {
+  if (agent.status === 'pending-qr') {
+    return {
+      botApi: pendingHealth(),
+      humanDashboard: pendingHealth(),
+      whatsapp: { status: 'pending-qr', detail: 'Pendiente escaneo QR' },
+      overall: 'pending-qr'
+    };
+  }
+
   if (!agent.enabled) {
     return {
       botApi: disabledHealth(),
@@ -168,6 +177,19 @@ function summarizeHealth(checks) {
 function disabledHealth() {
   return {
     status: 'disabled',
+    httpStatus: null,
+    responseTimeMs: null,
+    checkedAt: new Date().toISOString(),
+    lastSuccessfulCheck: null,
+    error: null,
+    lastError: null,
+    body: null
+  };
+}
+
+function pendingHealth() {
+  return {
+    status: 'pending-qr',
     httpStatus: null,
     responseTimeMs: null,
     checkedAt: new Date().toISOString(),

@@ -28,12 +28,15 @@ function renderAgents(payload) {
   lastAgentsPayload = payload;
   const agents = payload.agents || [];
   const visibleAgents = showActiveOnly && showActiveOnly.checked
-    ? agents.filter(agent => agent.enabled)
+    ? agents.filter(agent => agent.enabled || agent.status === 'pending-qr')
     : agents;
   const enabledCount = payload.enabledCount || agents.filter(agent => agent.enabled).length;
-  const disabledCount = payload.disabledCount || agents.filter(agent => !agent.enabled).length;
+  const pendingCount = agents.filter(agent => agent.status === 'pending-qr').length;
+  const disabledCount = agents.filter(agent => !agent.enabled && agent.status !== 'pending-qr').length;
 
-  agentCounter.textContent = `${enabledCount} activos · ${disabledCount} off`;
+  agentCounter.textContent = pendingCount
+    ? `${enabledCount} activos · ${pendingCount} pendiente QR · ${disabledCount} off`
+    : `${enabledCount} activos · ${disabledCount} off`;
   lastRefresh.textContent = `Última actualización: ${new Date(payload.loadedAt).toLocaleString()} · Fuente: ${payload.source}`;
   renderGlobalStatus(payload.health);
   renderAlerts(payload.alerts);
@@ -46,20 +49,21 @@ function renderAgents(payload) {
   }
 
   agentsBody.innerHTML = visibleAgents.map(agent => `
-    <tr class="${agent.enabled ? '' : 'agent-disabled'}">
+    <tr class="${agent.status === 'pending-qr' ? 'agent-pending' : agent.enabled ? '' : 'agent-disabled'}">
       <td><strong>${escapeHtml(agent.id)}</strong></td>
       <td>
         ${escapeHtml(agent.clientId || 'actual')}<br>
         <span class="env-badge ${escapeHtml(agent.environment || 'testing')}">${escapeHtml(agent.environment || 'testing')}</span>
         ${agent.readOnly ? '<span class="env-badge readonly">read-only</span>' : ''}
+        ${agent.status === 'pending-qr' ? '<span class="env-badge pending-qr">pendiente QR</span>' : ''}
       </td>
       <td>
         <strong>${escapeHtml(agent.name)}</strong><br>
         <span>${escapeHtml(agent.info.telefono || 'Sin teléfono')}</span>
       </td>
       <td>
-        <span class="badge ${agent.enabled ? 'enabled' : 'disabled'}">
-          ${agent.enabled ? 'Sí' : (agent._overrideInfo?.enabledOverridden ? 'Off en testing' : 'No')}
+        <span class="badge ${agent.status === 'pending-qr' ? 'pending-qr' : agent.enabled ? 'enabled' : 'disabled'}">
+          ${agent.status === 'pending-qr' ? 'Pendiente QR' : agent.enabled ? 'Sí' : (agent._overrideInfo?.enabledOverridden ? 'Off en testing' : 'No')}
         </span>
       </td>
       <td>${renderHealth(agent.health && agent.health.botApi)}</td>
@@ -111,7 +115,8 @@ function renderHealth(check) {
     degraded: 'Degraded',
     down: 'Down',
     unknown: 'Unknown',
-    disabled: 'Off'
+    disabled: 'Off',
+    'pending-qr': 'Pendiente QR'
   }[check.status] || check.status;
 
   const detail = check.error
@@ -156,6 +161,8 @@ function renderWhatsapp(whatsapp) {
         ? 'up'
         : whatsapp.status === 'disabled'
         ? 'disabled'
+        : whatsapp.status === 'pending-qr'
+        ? 'pending-qr'
         : 'unknown';
   return `
     <div class="health-cell">
@@ -210,6 +217,10 @@ function renderActionsStatus() {
 }
 
 function renderAgentActions(agent) {
+  if (agent.status === 'pending-qr') {
+    return '<span class="muted">Pendiente escaneo QR</span>';
+  }
+
   if (!agent.enabled) {
     return '<span class="muted">Deshabilitado en este entorno</span>';
   }

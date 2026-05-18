@@ -30,6 +30,8 @@
 >
 > **Fase 1 Santa Ana rutas finales (2026-05-18)**: rutas productivas registradas por SSH read-only: repo `/home/forma/bot_dolce`, auth `/home/forma/bot_dolce/.wwebjs_auth/session-santa-ana-session`, data/logs/catalog/dashboard y PM2 exactos. Asturias quedó preconfigurado en `config/agents.json` con teléfono `5493513114575` y dirección base acordada; QR/PM2 siguen pendientes.
 >
+> **Maestro pending QR (2026-05-18)**: Dashboard Maestro soporta `statusOverrides` para mostrar agentes en preparación. `asturias` debe quedar como `pending-qr` en testing hasta escanear QR; no genera health real ni alertas.
+>
 > **Última sesión documentación (2026-05-17)**: Se documentó el modelo tenant (`TENANT_MODEL.md`), se creó checklist migración Santa Ana (`SANTA_ANA_MIGRATION_CHECKLIST.md`), y se diseñó config futura de ejemplo (`multi-tenant/clients/dolce-party.example.json`). Sin cambios de código, runtime ni producción.
 >
 > **Sesión anterior (2026-05-17)**: Persistencia JSON (audit events + mutes) implementada en `data/dashboard-maestro/`. UI testing con banner `Testing · demo only` y badges `Off en testing`. `_overrideInfo` agregado en payload de agentes.
@@ -350,6 +352,7 @@ Fase 5: Testing (Local → Testing → Producción)
   - Pendiente 2026-05-17: número real confirmado `5493513114575`; no escanear QR ni levantar operación hasta la semana de alta.
   - Pendiente 2026-05-17: seguir `.gsd/milestones/multi-tenant-architecture/ASTURIAS_ONBOARDING_RUNBOOK.md` para testing, producción y rollback.
   - Progreso 2026-05-18: `config/agents.json` preconfigurado con teléfono real y dirección base; QR y PM2 siguen pendientes.
+  - Progreso 2026-05-18: Maestro soporta estado `pending-qr` por `statusOverrides`; usarlo para Asturias hasta el día del QR.
 - Commits: `bd76763`
 
 ### 🟢 Fase 5: Testing Pipeline (Prioridad Alta)

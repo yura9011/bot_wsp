@@ -24,6 +24,7 @@
 - No copiar historial ni pausas desde Santa Ana.
 - No tocar `bot_dolce` producción sin backup vigente y confirmación explícita.
 - Si se activa primero en testing, usar overrides/puertos testing y no mezclar con Santa Ana producción.
+- Mientras QR esté pendiente, Maestro debe mostrar Asturias como `pending-qr`, no como agente activo ni alerta.
 
 ## Pre-Checklist
 
@@ -64,6 +65,7 @@ Objetivo: validar QR, bot, dashboard y flujo sin afectar Santa Ana producción.
 
 2. Revisar `config/agents.override.json`:
    - Si `asturias` está deshabilitado por `enabledOverrides`, cambiarlo temporalmente a `true` o quitar el override solo durante la prueba.
+   - Quitar `statusOverrides.asturias = "pending-qr"` cuando se vaya a escanear QR.
    - Mantener Santa Ana testing deshabilitado.
 
 3. Levantar bot Asturias testing:
