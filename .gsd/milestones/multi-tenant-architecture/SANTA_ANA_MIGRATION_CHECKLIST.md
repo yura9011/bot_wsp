@@ -57,12 +57,18 @@ Antes de que el Maestro toque producción:
     - Dashboard humano: `dashboard-humano-santa-ana`.
     - Ver detalles en `SANTA_ANA_PRODUCTION_BASELINE.md`.
 
-- [ ] Registrar **rutas actuales**:
-  - `data/` → `data/santa-ana/`
-  - `logs/` → `logs/santa-ana/`
-  - `catalog` → `catalogs/catalogo-santa-ana.js`
-  - `.wwebjs_auth/` → `.wwebjs_auth/santa-ana-session/` (o similar)
-  - Dashboard humano → `dashboard-humano-v2/`
+- [x] Registrar **rutas actuales**:
+  - Repo/CWD producción → `/home/forma/bot_dolce`
+  - `data` agente → `/home/forma/bot_dolce/data/santa-ana`
+  - `logs` agente → `/home/forma/bot_dolce/logs/santa-ana`
+  - `catalog` → `/home/forma/bot_dolce/catalogs/catalogo-santa-ana.js`
+  - stats → `/home/forma/bot_dolce/data/estadisticas.json`
+  - pausas globales/dashboard → `/home/forma/bot_dolce/data/pausas.json`
+  - `.wwebjs_auth` → `/home/forma/bot_dolce/.wwebjs_auth/session-santa-ana-session`
+  - Dashboard humano → `/home/forma/bot_dolce/dashboard-humano-v2`
+  - Bot PM2 → `bot-dolce-prd`, script `/home/forma/bot_dolce/orchestrator.js`, CWD `/home/forma/bot_dolce`
+  - Dashboard PM2 → `dashboard-humano-santa-ana`, script `/home/forma/bot_dolce/dashboard-humano-v2/server.js`, CWD `/home/forma/bot_dolce/dashboard-humano-v2`
+  - 2026-05-18: rutas y PM2 verificados por SSH read-only; ambos procesos online.
 
 - [ ] **Validar dashboard humano actual**: acceder vía navegador, confirmar que login, conversaciones y estadísticas funcionan.
   - 2026-05-17 read-only: `GET http://127.0.0.1:3001/index.html` responde `HTTP 200 OK`.
@@ -137,7 +143,7 @@ El Maestro comienza a listar Santa Ana producción como agente observable:
 | Fase | Estado |
 |------|--------|
 | Fase 0 — Precondiciones testing | ✅ Cerrada para testing |
-| Fase 1 — Preparación producción | ⏳ Parcial: backup y PM2 registrados |
+| Fase 1 — Preparación producción | ⏳ Parcial: backup, PM2 y rutas registrados |
 | Fase 2 — Alta Maestro read-only | ✅ Completada |
 | Fase 3 — Backup desde Maestro | ⏳ Pendiente |
 | Fase 4 — Control PM2 producción | 🔒 Bloqueado hasta decisión explícita |

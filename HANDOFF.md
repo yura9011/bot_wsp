@@ -86,6 +86,8 @@ data/santa-ana/             ← Runtime data (NO EDITAR, está en .gitignore)
 - Producción sigue read-only desde Maestro; no habilitar PM2 control productivo.
 - Producción intacta. No se conectó Maestro a `bot_dolce`.
 - Backup manual productivo validado: `/home/forma/backups-prod/bot_dolce-pre-maestro-20260517-232344.tar.gz` (`406900359 bytes`, `TAR_OK`).
+- Rutas productivas Santa Ana registradas: repo `/home/forma/bot_dolce`, auth `.wwebjs_auth/session-santa-ana-session`, data/logs/catalog/dashboard y PM2 exactos.
+- Asturias preconfigurado en `config/agents.json` con teléfono `5493513114575`; QR y PM2 siguen pendientes.
 
 ### agents.override.json — VPS testing
 
@@ -150,6 +152,7 @@ No incluir `dashboard`: ya se validó que el dashboard humano demo del puerto `5
 3. **Mejora futura opcional**: crear PM2 separado para dashboard demo `5011` si se necesita reiniciarlo sin reiniciar `bot-demo-local`.
 4. **Asturias**: dejar pendiente hasta la semana de alta; número real `5493513114575`, QR pendiente, sin PM2 nuevo ni operación comercial todavía.
    - Runbook operativo: `.gsd/milestones/multi-tenant-architecture/ASTURIAS_ONBOARDING_RUNBOOK.md`.
+   - `config/agents.json` ya tiene teléfono real y dirección base acordada.
 
 ## 📐 Modelo Tenant — Documentado
 
@@ -180,6 +183,8 @@ Fases:
 Estado baseline Santa Ana 2026-05-17:
 - `dashboard-humano-santa-ana` online, script `/home/forma/bot_dolce/dashboard-humano-v2/server.js`, puerto `3001`.
 - `bot-dolce-prd` online, script `/home/forma/bot_dolce/orchestrator.js`, bot API `3011`.
+- Auth WhatsApp: `/home/forma/bot_dolce/.wwebjs_auth/session-santa-ana-session`.
+- Data/logs/catalog: `/home/forma/bot_dolce/data/santa-ana`, `/home/forma/bot_dolce/logs/santa-ana`, `/home/forma/bot_dolce/catalogs/catalogo-santa-ana.js`.
 - `GET http://127.0.0.1:3001/index.html` responde `200 OK`.
 - `GET http://127.0.0.1:3011/status` responde `agentId: santa-ana`, `isRunning: true`, `globalPausado: false`.
 - Captura usuario confirma panel visual cargado con `Chats`, `Config`, `Stats` y conversación abierta.
@@ -233,6 +238,7 @@ Implementación desplegada y probada en `bot_testing` VPS el 2026-05-17.
 - No levantar PM2 nuevo ni activar operación comercial todavía.
 - Usar mismos datos base que Santa Ana por ahora: dirección `Sta. Ana 2637, X5010EEK Córdoba`, horarios y admins.
 - Catálogo compartido aceptado por ahora: `catalogs/catalogo-santa-ana.js`.
+- `config/agents.json` ya está preconfigurado con teléfono real y dirección base.
 - Runbook de alta: `.gsd/milestones/multi-tenant-architecture/ASTURIAS_ONBOARDING_RUNBOOK.md`.
 
 ### Fix conocido: express.static en dashboard-humano-v2

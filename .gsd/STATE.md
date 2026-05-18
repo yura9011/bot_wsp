@@ -4,6 +4,21 @@
 
 ## Last Session Summary
 
+Sesión preconfig Asturias y cierre rutas Fase 1:
+
+- Rutas productivas Santa Ana registradas por SSH read-only:
+  - repo: `/home/forma/bot_dolce`
+  - auth: `/home/forma/bot_dolce/.wwebjs_auth/session-santa-ana-session`
+  - data: `/home/forma/bot_dolce/data/santa-ana`
+  - logs: `/home/forma/bot_dolce/logs/santa-ana`
+  - catalog: `/home/forma/bot_dolce/catalogs/catalogo-santa-ana.js`
+  - dashboard: `/home/forma/bot_dolce/dashboard-humano-v2`
+- PM2 productivo registrado: `bot-dolce-prd` ejecuta `/home/forma/bot_dolce/orchestrator.js`; `dashboard-humano-santa-ana` ejecuta `/home/forma/bot_dolce/dashboard-humano-v2/server.js`.
+- Asturias preconfigurado en `config/agents.json` con teléfono `5493513114575` y dirección `Sta. Ana 2637, X5010EEK Córdoba`.
+- QR Asturias, PM2 nuevo y operación comercial siguen pendientes.
+
+## Last Session Summary (anterior)
+
 Sesión Fase 1 Santa Ana y Asturias pendiente:
 
 - Backup manual productivo de `/home/forma/bot_dolce` creado en `/home/forma/backups-prod/bot_dolce-pre-maestro-20260517-232344.tar.gz`.

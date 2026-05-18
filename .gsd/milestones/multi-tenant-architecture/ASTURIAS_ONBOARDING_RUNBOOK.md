@@ -36,16 +36,18 @@
 
 ## Config Pendiente Antes de Alta
 
-Actualizar `config/agents.json` solo cuando se vaya a hacer el alta:
+`config/agents.json` ya quedó preconfigurado para Asturias:
 
-- `asturias.info.telefono`: cambiar de placeholder a `5493513114575`.
-- `asturias.info.direccion`: usar `Sta. Ana 2637, X5010EEK Córdoba` si no hay dirección específica nueva.
-- Mantener `asturias.paths.catalog = "catalogs/catalogo-santa-ana.js"` por ahora.
+- `asturias.info.telefono = "5493513114575"`
+- `asturias.info.direccion = "Sta. Ana 2637, X5010EEK Córdoba"`
+- `asturias.paths.catalog = "catalogs/catalogo-santa-ana.js"`
 
-Después del cambio:
+No escanear QR ni levantar PM2 hasta la semana de alta.
+
+Commit de preconfiguración:
 
 ```bash
-git add config/agents.json HANDOFF.md .gsd/state/IMPLEMENTATION_PLAN.md
+git add config/agents.json HANDOFF.md .gsd/state/IMPLEMENTATION_PLAN.md .gsd/milestones/multi-tenant-architecture/ASTURIAS_ONBOARDING_RUNBOOK.md
 git commit -m "config(asturias): prepare whatsapp number"
 git push origin main
 ```

@@ -28,6 +28,8 @@
 >
 > **Asturias pendiente QR (2026-05-17)**: número real confirmado `5493513114575`. Por ahora queda pendiente sin escanear QR, sin levantar PM2 nuevo y sin activar operación comercial. Usará datos base compartidos con Santa Ana y catálogo `catalogs/catalogo-santa-ana.js` hasta nueva decisión.
 >
+> **Fase 1 Santa Ana rutas finales (2026-05-18)**: rutas productivas registradas por SSH read-only: repo `/home/forma/bot_dolce`, auth `/home/forma/bot_dolce/.wwebjs_auth/session-santa-ana-session`, data/logs/catalog/dashboard y PM2 exactos. Asturias quedó preconfigurado en `config/agents.json` con teléfono `5493513114575` y dirección base acordada; QR/PM2 siguen pendientes.
+>
 > **Última sesión documentación (2026-05-17)**: Se documentó el modelo tenant (`TENANT_MODEL.md`), se creó checklist migración Santa Ana (`SANTA_ANA_MIGRATION_CHECKLIST.md`), y se diseñó config futura de ejemplo (`multi-tenant/clients/dolce-party.example.json`). Sin cambios de código, runtime ni producción.
 >
 > **Sesión anterior (2026-05-17)**: Persistencia JSON (audit events + mutes) implementada en `data/dashboard-maestro/`. UI testing con banner `Testing · demo only` y badges `Off en testing`. `_overrideInfo` agregado en payload de agentes.
@@ -175,6 +177,7 @@
   - Progreso 2026-05-17: baseline read-only registrada. PM2 reales: `bot-dolce-prd`, `dashboard-humano-santa-ana`. HTTP `3001/index.html` y `3011/status` OK.
   - Progreso 2026-05-17: backup manual productivo creado y validado: `/home/forma/backups-prod/bot_dolce-pre-maestro-20260517-232344.tar.gz` (`406900359 bytes`, `TAR_OK`).
   - Progreso 2026-05-17: post-backup producción OK: `3011/status` `isRunning=true`, `3001/index.html` HTTP `200`, PM2 productivo online.
+  - Progreso 2026-05-18: rutas productivas finales registradas: `.wwebjs_auth/session-santa-ana-session`, `data/santa-ana`, `logs/santa-ana`, `catalogs/catalogo-santa-ana.js`, `dashboard-humano-v2`, PM2 scripts/CWD.
 - [ ] **Fase 2 — Alta Maestro read-only**: health checks y métricas Santa Ana desde Maestro, sin botones destructivos
   - Progreso 2026-05-17: Maestro testing lista `santa-ana-prod` como additionalAgent read-only desde `config/agents.override.json`.
   - Progreso 2026-05-17: health checks `3011/status` y dashboard `3001` OK; overall `ok`.
@@ -346,6 +349,7 @@ Fase 5: Testing (Local → Testing → Producción)
 - [ ] **4.4 Escanear QR de Asturias** (sesión WhatsApp) — pendiente para testing
   - Pendiente 2026-05-17: número real confirmado `5493513114575`; no escanear QR ni levantar operación hasta la semana de alta.
   - Pendiente 2026-05-17: seguir `.gsd/milestones/multi-tenant-architecture/ASTURIAS_ONBOARDING_RUNBOOK.md` para testing, producción y rollback.
+  - Progreso 2026-05-18: `config/agents.json` preconfigurado con teléfono real y dirección base; QR y PM2 siguen pendientes.
 - Commits: `bd76763`
 
 ### 🟢 Fase 5: Testing Pipeline (Prioridad Alta)
