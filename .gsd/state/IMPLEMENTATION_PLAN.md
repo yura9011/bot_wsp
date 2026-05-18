@@ -34,6 +34,8 @@
 >
 > **Backup/Onboarding/Exposición preparados (2026-05-18)**: se agregó `scripts/backup-production.sh` para backup productivo desde Maestro con guardrails, pero queda deshabilitado por env hasta confirmación explícita. Se agregó checklist reusable de onboarding y plan de exposición HTTPS del Maestro; falta dominio/subdominio para ejecutar exposición.
 >
+> **Dashboard humano baseline (2026-05-18)**: prueba real en `demo-local`/`5011` validó lista de chats, mensajes del bot, envío humano desde panel y botón rápido `MUCHAS GRACIAS`. Gap: no hay controles visibles de tomar/pausar/reanudar/finalizar handoff real. Ver `HUMAN_DASHBOARD_BASELINE.md`.
+>
 > **Última sesión documentación (2026-05-17)**: Se documentó el modelo tenant (`TENANT_MODEL.md`), se creó checklist migración Santa Ana (`SANTA_ANA_MIGRATION_CHECKLIST.md`), y se diseñó config futura de ejemplo (`multi-tenant/clients/dolce-party.example.json`). Sin cambios de código, runtime ni producción.
 >
 > **Sesión anterior (2026-05-17)**: Persistencia JSON (audit events + mutes) implementada en `data/dashboard-maestro/`. UI testing con banner `Testing · demo only` y badges `Off en testing`. `_overrideInfo` agregado en payload de agentes.
@@ -171,6 +173,7 @@
 - `.gsd/milestones/multi-tenant-architecture/ASTURIAS_ONBOARDING_RUNBOOK.md` — runbook operativo para alta Asturias cuando esté disponible el QR
 - `.gsd/milestones/multi-tenant-architecture/AGENT_ONBOARDING_CHECKLIST.md` — checklist reusable para futuros agentes/clientes
 - `.gsd/milestones/multi-tenant-architecture/MAESTRO_EXPOSURE_PLAN.md` — plan de exposición segura con HTTPS/auth
+- `.gsd/milestones/multi-tenant-architecture/HUMAN_DASHBOARD_BASELINE.md` — baseline del dashboard humano y gap de handoff formal
 - `multi-tenant/clients/README.md` — estructura futura explicada
 - `multi-tenant/clients/dolce-party.example.json` — ejemplo conceptual (no activo)
 
@@ -358,6 +361,7 @@ Fase 5: Testing (Local → Testing → Producción)
   - Pendiente 2026-05-17: seguir `.gsd/milestones/multi-tenant-architecture/ASTURIAS_ONBOARDING_RUNBOOK.md` para testing, producción y rollback.
   - Progreso 2026-05-18: `config/agents.json` preconfigurado con teléfono real y dirección base; QR y PM2 siguen pendientes.
   - Progreso 2026-05-18: Maestro soporta estado `pending-qr` por `statusOverrides`; usarlo para Asturias hasta el día del QR.
+  - Nota 2026-05-18: dashboard humano actual permite respuesta manual básica, pero no handoff formal con tomar/pausar/reanudar.
 - Commits: `bd76763`
 
 ### 🟢 Fase 5: Testing Pipeline (Prioridad Alta)

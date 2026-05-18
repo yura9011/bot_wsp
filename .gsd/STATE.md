@@ -4,6 +4,17 @@
 
 ## Last Session Summary
 
+Sesión baseline dashboard humano:
+
+- Prueba realizada en `demo-local` / dashboard `5011`, no en producción.
+- Validado: carga de chats, conversación visible, mensajes del bot visibles, envío humano desde panel y llegada al WhatsApp cliente.
+- Botón `MUCHAS GRACIAS` validado como respuesta rápida; envía texto al cliente.
+- Después del mensaje del cliente `gracias`, el bot volvió a responder automáticamente.
+- Gap documentado: no hay controles visibles de tomar conversación, pausar bot para chat, reanudar bot ni finalizar handoff real.
+- Nuevo documento: `.gsd/milestones/multi-tenant-architecture/HUMAN_DASHBOARD_BASELINE.md`.
+
+## Last Session Summary (anterior)
+
 Sesión preparación backup Maestro, onboarding y exposición:
 
 - `scripts/backup-production.sh` agregado para backup productivo desde Maestro con guardrails:

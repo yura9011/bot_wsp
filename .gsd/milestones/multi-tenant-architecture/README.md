@@ -22,6 +22,7 @@ Read these first, in order:
 7. [ASTURIAS_ONBOARDING_RUNBOOK.md](./ASTURIAS_ONBOARDING_RUNBOOK.md) — operational checklist for the pending Asturias QR/onboarding.
 8. [AGENT_ONBOARDING_CHECKLIST.md](./AGENT_ONBOARDING_CHECKLIST.md) — reusable checklist for future agents/clients.
 9. [MAESTRO_EXPOSURE_PLAN.md](./MAESTRO_EXPOSURE_PLAN.md) — HTTPS/reverse-proxy plan before exposing Maestro externally.
+10. [HUMAN_DASHBOARD_BASELINE.md](./HUMAN_DASHBOARD_BASELINE.md) — tested behavior and handoff gap for the current human dashboard.
 
 ## Historical Documents
 

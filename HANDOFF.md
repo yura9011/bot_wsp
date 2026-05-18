@@ -85,6 +85,7 @@ data/santa-ana/             ← Runtime data (NO EDITAR, está en .gitignore)
 - PM2 control está habilitado **solo en testing** y fue probado con `restart bot` sobre `demo-local`.
 - Maestro soporta estado `pending-qr` por `statusOverrides`; usarlo para agentes preparados pero sin WhatsApp escaneado.
 - Backup productivo desde Maestro está preparado en `scripts/backup-production.sh`, pero **no habilitado** por env ni ejecutado desde UI.
+- Dashboard humano baseline documentado: responde desde panel, pero no tiene controles visibles de handoff formal.
 - Producción sigue read-only desde Maestro; no habilitar PM2 control productivo.
 - Producción intacta. No se conectó Maestro a `bot_dolce`.
 - Backup manual productivo validado: `/home/forma/backups-prod/bot_dolce-pre-maestro-20260517-232344.tar.gz` (`406900359 bytes`, `TAR_OK`).
@@ -171,6 +172,7 @@ multi-tenant/clients/{clientId}/
 ```
 Ejemplo conceptual en `multi-tenant/clients/dolce-party.example.json`.
 Checklist reusable de altas: `.gsd/milestones/multi-tenant-architecture/AGENT_ONBOARDING_CHECKLIST.md`.
+Baseline dashboard humano: `.gsd/milestones/multi-tenant-architecture/HUMAN_DASHBOARD_BASELINE.md`.
 
 ## 📋 Checklist Migración Santa Ana
 
@@ -244,6 +246,7 @@ Implementación desplegada y probada en `bot_testing` VPS el 2026-05-17.
 - Catálogo compartido aceptado por ahora: `catalogs/catalogo-santa-ana.js`.
 - `config/agents.json` ya está preconfigurado con teléfono real y dirección base.
 - Maestro debe mostrarlo como `pending-qr` en testing hasta escanear QR.
+- Tener en cuenta gap del dashboard humano: respuesta manual básica sí, handoff formal no.
 - Runbook de alta: `.gsd/milestones/multi-tenant-architecture/ASTURIAS_ONBOARDING_RUNBOOK.md`.
 
 ### Fix conocido: express.static en dashboard-humano-v2
