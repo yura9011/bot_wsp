@@ -34,7 +34,9 @@
 >
 > **Backup/Onboarding/Exposición preparados (2026-05-18)**: se agregó `scripts/backup-production.sh` para backup productivo desde Maestro con guardrails, pero queda deshabilitado por env hasta confirmación explícita. Se agregó checklist reusable de onboarding y plan de exposición HTTPS del Maestro; falta dominio/subdominio para ejecutar exposición.
 >
-> **Dashboard humano baseline (2026-05-18)**: prueba real en `demo-local`/`5011` validó lista de chats, mensajes del bot, envío humano desde panel y botón rápido `MUCHAS GRACIAS`. Gap: no hay controles visibles de tomar/pausar/reanudar/finalizar handoff real. Ver `HUMAN_DASHBOARD_BASELINE.md`.
+> **Dashboard humano baseline (2026-05-18)**: prueba real en `demo-local`/`5011` validó lista de chats, mensajes del bot, envío humano desde panel y botón rápido `MUCHAS GRACIAS`. El gap original era falta de controles visibles de tomar/pausar/reanudar/finalizar handoff real. Ver `HUMAN_DASHBOARD_BASELINE.md`.
+>
+> **Dashboard humano handoff formal (2026-05-18)**: implementación local agregada en `dashboard-humano-v2`. Panel muestra `Tomar conversación`, `Devolver al bot`, estado por chat (`Bot activo`, `Esperando humano`, `Atendido por humano`) y `MUCHAS GRACIAS` ahora reanuda el bot. Usa Bot API `/pause/:userId` y `/resume/:userId` con razón `atendido_desde_dashboard`. Pendiente deploy/validación final en `bot_testing` si este commit aún no está en VPS.
 >
 > **Última sesión documentación (2026-05-17)**: Se documentó el modelo tenant (`TENANT_MODEL.md`), se creó checklist migración Santa Ana (`SANTA_ANA_MIGRATION_CHECKLIST.md`), y se diseñó config futura de ejemplo (`multi-tenant/clients/dolce-party.example.json`). Sin cambios de código, runtime ni producción.
 >

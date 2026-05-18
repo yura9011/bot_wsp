@@ -47,20 +47,31 @@ Endpoints existentes observados en código:
 
 ## Gap Detectado
 
-No hay controles visibles para:
+El gap original era que no había controles visibles para:
 
 - Tomar conversación.
 - Pausar bot para un chat desde el dashboard.
 - Reanudar bot para un chat desde el dashboard.
 - Finalizar handoff real y devolver explícitamente al bot.
 
-El botón `MUCHAS GRACIAS` no debe considerarse cierre operativo de handoff. Es una respuesta rápida.
+## Handoff Formal Implementado
+
+Fecha: 2026-05-18.
+
+Se agregó el flujo formal en `dashboard-humano-v2`:
+
+- Botón `Tomar conversación`: pausa el bot para ese chat usando `POST /pause/:userId` con razón `atendido_desde_dashboard`.
+- Botón `Devolver al bot`: reanuda el bot usando `POST /resume/:userId`.
+- Estado visible por chat: `Bot activo`, `Esperando humano`, `Atendido por humano`.
+- El botón `MUCHAS GRACIAS` ahora envía el mensaje final y además reanuda el bot.
+
+El botón `MUCHAS GRACIAS` sigue siendo una respuesta rápida; el handoff formal lo definen `Tomar conversación` y `Devolver al bot`.
 
 ## Implicancia Para Asturias
 
 Asturias puede operar con atención humana básica desde el panel actual si se acepta este comportamiento simple.
 
-Si se necesita operación humana ordenada, conviene implementar handoff formal antes o inmediatamente después del alta:
+Para Asturias, el panel debe validarse con el flujo formal durante el alta:
 
 - botón `Tomar conversación`;
 - estado `Atendido por humano`;
@@ -70,4 +81,4 @@ Si se necesita operación humana ordenada, conviene implementar handoff formal a
 
 ## Recomendación
 
-Antes de usar el panel para atención diaria intensiva, agregar una mejora específica de handoff formal. Para MVP comercial, el panel actual sirve para responder manualmente, pero no para administrar una cola humana robusta.
+Antes de usar el panel para atención diaria intensiva, validar el handoff formal en el entorno que corresponda al alta. Para MVP comercial, el panel permite responder manualmente y administrar pausa/reanudación por chat.

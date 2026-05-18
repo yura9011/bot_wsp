@@ -8,11 +8,41 @@ async function loadMessages(userId) {
       const messages = await response.json();
       renderMessages(messages);
       document.getElementById('chatName').textContent = userId.split('@')[0];
+      updateConversationStatus(window.currentChatState || 'bot');
     }
   } catch (error) {
     console.error('Error cargando mensajes:', error);
   }
 }
+
+function updateConversationStatus(estado = 'bot') {
+  window.currentChatState = estado;
+
+  const status = document.getElementById('chatStatus');
+  const takeBtn = document.getElementById('takeBtn');
+  const resumeBtn = document.getElementById('resumeBtn');
+  const finishBtn = document.getElementById('finishBtn');
+
+  if (status) {
+    status.className = 'status-badge';
+    if (estado === 'active_human') {
+      status.textContent = 'Atendido por humano';
+      status.classList.add('active');
+    } else if (estado === 'waiting_human') {
+      status.textContent = 'Esperando humano';
+      status.classList.add('waiting');
+    } else {
+      status.textContent = 'Bot activo';
+      status.classList.add('bot');
+    }
+  }
+
+  if (takeBtn) takeBtn.disabled = !currentUserId || estado === 'active_human';
+  if (resumeBtn) resumeBtn.disabled = !currentUserId || estado === 'bot';
+  if (finishBtn) finishBtn.disabled = !currentUserId;
+}
+
+window.updateConversationStatus = updateConversationStatus;
 
 function renderMessages(messages) {
   const container = document.getElementById('messagesContainer');
@@ -55,6 +85,8 @@ function renderMessages(messages) {
 }
 
 document.getElementById('sendBtn')?.addEventListener('click', sendMessage);
+document.getElementById('takeBtn')?.addEventListener('click', takeConversation);
+document.getElementById('resumeBtn')?.addEventListener('click', resumeConversation);
 document.getElementById('messageInput')?.addEventListener('keypress', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
@@ -89,6 +121,52 @@ async function sendMessage() {
   }
 }
 
+async function takeConversation() {
+  if (!currentUserId) return;
+
+  try {
+    const response = await fetch(`/api/chats/${currentUserId}/take`, {
+      method: 'POST',
+      credentials: 'include'
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error || 'No se pudo tomar la conversación');
+    }
+
+    updateConversationStatus('active_human');
+    await loadChats();
+    await loadMessages(currentUserId);
+  } catch (error) {
+    console.error('Error tomando conversación:', error);
+    alert(error.message);
+  }
+}
+
+async function resumeConversation() {
+  if (!currentUserId) return;
+
+  try {
+    const response = await fetch(`/api/chats/${currentUserId}/resume`, {
+      method: 'POST',
+      credentials: 'include'
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error || 'No se pudo devolver la conversación al bot');
+    }
+
+    updateConversationStatus('bot');
+    await loadChats();
+    await loadMessages(currentUserId);
+  } catch (error) {
+    console.error('Error devolviendo conversación:', error);
+    alert(error.message);
+  }
+}
+
 document.getElementById('finishBtn')?.addEventListener('click', async () => {
   if (!currentUserId) return;
   
@@ -102,10 +180,13 @@ document.getElementById('finishBtn')?.addEventListener('click', async () => {
     
     if (response.ok) {
       alert('Conversación finalizada. Bot reactivado.');
-      loadMessages(currentUserId);
-      loadChats();
+      updateConversationStatus('bot');
+      await loadMessages(currentUserId);
+      await loadChats();
     }
   } catch (error) {
     console.error('Error finalizando conversación:', error);
   }
 });
+
+updateConversationStatus();

@@ -85,7 +85,7 @@ data/santa-ana/             ← Runtime data (NO EDITAR, está en .gitignore)
 - PM2 control está habilitado **solo en testing** y fue probado con `restart bot` sobre `demo-local`.
 - Maestro soporta estado `pending-qr` por `statusOverrides`; usarlo para agentes preparados pero sin WhatsApp escaneado.
 - Backup productivo desde Maestro está preparado en `scripts/backup-production.sh`, pero **no habilitado** por env ni ejecutado desde UI.
-- Dashboard humano baseline documentado: responde desde panel, pero no tiene controles visibles de handoff formal.
+- Dashboard humano: handoff formal implementado en código (`Tomar conversación`, `Devolver al bot`, estado por chat, `MUCHAS GRACIAS` reanuda bot). Pendiente deploy/validación final en `bot_testing` si este commit aún no está en VPS.
 - Producción sigue read-only desde Maestro; no habilitar PM2 control productivo.
 - Producción intacta. No se conectó Maestro a `bot_dolce`.
 - Backup manual productivo validado: `/home/forma/backups-prod/bot_dolce-pre-maestro-20260517-232344.tar.gz` (`406900359 bytes`, `TAR_OK`).
@@ -152,8 +152,9 @@ No incluir `dashboard`: ya se validó que el dashboard humano demo del puerto `5
 
 1. **Santa Ana integración (Fase 1)**: completar registro final de rutas actuales; backup manual y PM2 ya están validados.
 2. **Dashboard Maestro**: mantener acceso por túnel SSH; no exponer puerto `4050` hasta decidir HTTPS/auth.
-3. **Mejora futura opcional**: crear PM2 separado para dashboard demo `5011` si se necesita reiniciarlo sin reiniciar `bot-demo-local`.
-4. **Asturias**: dejar pendiente hasta la semana de alta; número real `5493513114575`, QR pendiente, sin PM2 nuevo ni operación comercial todavía.
+3. **Dashboard humano demo**: validar handoff formal en `demo-local`/`5011` después del deploy: tomar conversación, enviar mensaje humano, confirmar que el bot no responde mientras está pausado, devolver al bot y confirmar que responde de nuevo.
+4. **Mejora futura opcional**: crear PM2 separado para dashboard demo `5011` si se necesita reiniciarlo sin reiniciar `bot-demo-local`.
+5. **Asturias**: dejar pendiente hasta la semana de alta; número real `5493513114575`, QR pendiente, sin PM2 nuevo ni operación comercial todavía.
    - Runbook operativo: `.gsd/milestones/multi-tenant-architecture/ASTURIAS_ONBOARDING_RUNBOOK.md`.
    - `config/agents.json` ya tiene teléfono real y dirección base acordada.
 5. **Exposición Maestro**: seguir `.gsd/milestones/multi-tenant-architecture/MAESTRO_EXPOSURE_PLAN.md`; falta dominio/subdominio y lista de usuarios.

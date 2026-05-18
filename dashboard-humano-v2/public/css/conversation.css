@@ -27,6 +27,14 @@
     color: var(--gray-900);
 }
 
+.conversation-header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
 /* --- ESTADOS DE CONVERSACIÓN --- */
 .status-badge {
     padding: var(--spacing-1) var(--spacing-4);
@@ -47,6 +55,12 @@
     background-color: #dcfce7;
     color: #166534;
     border: 1px solid #bbf7d0;
+}
+
+.status-badge.bot {
+    background-color: var(--accent-100);
+    color: var(--accent-900);
+    border: 1px solid var(--accent-300);
 }
 
 /* --- ÁREA DE MENSAJES --- */
@@ -167,6 +181,43 @@
     box-shadow: var(--shadow-md);
 }
 
+.btn-handoff,
+.btn-resume {
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: var(--spacing-2) var(--spacing-3);
+    min-height: 36px;
+    font-weight: var(--font-bold);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    white-space: nowrap;
+}
+
+.btn-handoff {
+    background-color: var(--primary-500);
+}
+
+.btn-resume {
+    background-color: var(--gray-700);
+}
+
+.btn-handoff:hover,
+.btn-resume:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-handoff:disabled,
+.btn-resume:disabled,
+.btn-finish:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
 .btn-finish {
     background-color: var(--success);
     color: #fff;
@@ -189,6 +240,9 @@
 @media (max-width: 767px) {
     .conversation-header {
         padding: var(--spacing-3) var(--spacing-4);
+        align-items: flex-start;
+        flex-direction: column;
+        gap: var(--spacing-2);
     }
     
     .messages-container {

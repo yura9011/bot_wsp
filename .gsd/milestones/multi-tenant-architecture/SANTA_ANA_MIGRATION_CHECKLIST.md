@@ -73,6 +73,7 @@ Antes de que el Maestro toque producción:
 - [ ] **Validar dashboard humano actual**: acceder vía navegador, confirmar que login, conversaciones y estadísticas funcionan.
   - 2026-05-17 read-only: `GET http://127.0.0.1:3001/index.html` responde `HTTP 200 OK`.
   - 2026-05-17 captura usuario: panel autenticado como `Administrador`, tabs `Chats`, `Config`, `Stats`, lista de chats y conversación abierta.
+  - 2026-05-18 testing/demo: handoff formal implementado para el dashboard humano (`Tomar conversación`, `Devolver al bot`, estados por chat y `MUCHAS GRACIAS` reanuda). Validar primero en `demo-local` antes de llevarlo a producción.
   - Pendiente: prueba manual de acciones internas (login/logout, envío humano, finish, config, stats).
 
 - [ ] **No modificar procesos ni config.** Esta fase es solo registro y backup.

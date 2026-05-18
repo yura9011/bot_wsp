@@ -22,6 +22,8 @@
 - [ ] Confirmar que los puertos no están en uso.
 - [ ] Confirmar que el catálogo existe.
 - [ ] Dejar el agente como `pending-qr` en Maestro si el WhatsApp todavía no fue escaneado.
+- [ ] Quitar `pending-qr` solo cuando el QR haya sido escaneado y `/status` responda `isRunning=true`.
+- [ ] Usar estados claros en Maestro: `pending-qr`, `active`, `disabled`, `read-only`.
 - [ ] Crear runbook específico si el alta no sigue el camino estándar.
 
 ## Alta Técnica
@@ -34,6 +36,7 @@
 - [ ] Escanear QR.
 - [ ] Validar `/status`.
 - [ ] Validar dashboard humano.
+- [ ] Validar handoff formal: tomar conversación, enviar como humano, devolver al bot.
 - [ ] Validar mensaje de prueba.
 - [ ] Guardar PM2 si corresponde.
 

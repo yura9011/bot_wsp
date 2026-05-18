@@ -48,6 +48,22 @@
     animation: pulse 2s infinite;
 }
 
+.chat-item.active_human {
+    background-color: #f5f3ff;
+}
+
+.chat-item.active_human::after {
+    content: '';
+    position: absolute;
+    left: var(--spacing-1);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60%;
+    background-color: var(--primary-500);
+    border-radius: var(--radius-full);
+}
+
 /* --- CHAT AVATAR --- */
 .chat-avatar {
     width: 48px;
@@ -109,6 +125,14 @@
     text-overflow: ellipsis;
     line-height: 1.4;
     max-width: 100%;
+}
+
+.chat-state-label {
+    font-size: 10px;
+    font-weight: var(--font-bold);
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
 /* --- BADGES EN LISTA --- */

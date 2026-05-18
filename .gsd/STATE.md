@@ -4,6 +4,19 @@
 
 ## Last Session Summary
 
+Sesión handoff formal dashboard humano:
+
+- Implementación en `dashboard-humano-v2` para demo/testing.
+- Controles agregados al panel: `Tomar conversación`, `Devolver al bot`, se mantiene `Enviar` y `MUCHAS GRACIAS`.
+- `Tomar conversación` usa Bot API `POST /pause/:userId` con razón `atendido_desde_dashboard`.
+- `Devolver al bot` usa Bot API `POST /resume/:userId`.
+- `POST /api/chats/:userId/finish` ahora envía `MUCHAS GRACIAS` y reanuda el bot.
+- Estados visibles por chat: `Bot activo`, `Esperando humano`, `Atendido por humano`.
+- Validación local: `node --check` OK en `dashboard-humano-v2/server.js`, `conversation.js`, `chat-list.js` y `lib/agent-manager.js`.
+- Producción no fue tocada. Pendiente deploy/validación en `bot_testing` si este commit aún no está en VPS.
+
+## Last Session Summary (anterior)
+
 Sesión baseline dashboard humano:
 
 - Prueba realizada en `demo-local` / dashboard `5011`, no en producción.

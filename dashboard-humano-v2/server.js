@@ -66,6 +66,18 @@ function getBotApiPort() {
   return 3011;
 }
 
+async function callBotApi(pathname, options = {}) {
+  const botPort = getBotApiPort();
+  const response = await fetch(`http://127.0.0.1:${botPort}${pathname}`, options);
+
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error(`Bot API error: ${err}`);
+  }
+
+  return response;
+}
+
 function leerHistorial() {
   try {
     if (fs.existsSync(HISTORIAL_PATH)) {
@@ -99,11 +111,12 @@ function obtenerChats() {
     if (!mensajes || mensajes.length === 0) continue;
 
     const ultimoMensaje = mensajes[mensajes.length - 1];
-    const pausado = pausas[userId]?.pausado || false;
+    const pausa = pausas[userId] || {};
+    const pausado = pausa.pausado || false;
     
     let estado = 'bot'; // Por defecto, bot manejando
     if (pausado) {
-      estado = 'waiting_human'; // Cliente esperando humano
+      estado = pausa.razon === 'atendido_desde_dashboard' ? 'active_human' : 'waiting_human';
     }
 
     chats.push({
@@ -250,17 +263,11 @@ app.post('/api/chats/:userId/message', authenticateToken, async (req, res) => {
 
   try {
     // Enviar via bot API (que tiene el cliente WhatsApp)
-    const botPort = getBotApiPort();
-    const response = await fetch(`http://127.0.0.1:${botPort}/message/sendMessage/${AGENT_ID}`, {
+    await callBotApi(`/message/sendMessage/${AGENT_ID}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ chatId: userId, message })
     });
-
-    if (!response.ok) {
-      const err = await response.text();
-      throw new Error(`Bot API error: ${err}`);
-    }
 
     io.emit('message_sent', { userId, message, timestamp: Date.now() });
     res.json({ success: true });
@@ -270,22 +277,54 @@ app.post('/api/chats/:userId/message', authenticateToken, async (req, res) => {
   }
 });
 
+app.post('/api/chats/:userId/take', authenticateToken, async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    await callBotApi(`/pause/${encodeURIComponent(userId)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reason: 'atendido_desde_dashboard' })
+    });
+
+    io.emit('handoff_taken', { userId });
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error tomando conversación:', error.message);
+    res.status(500).json({ error: 'Error tomando conversación: ' + error.message });
+  }
+});
+
+app.post('/api/chats/:userId/resume', authenticateToken, async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    await callBotApi(`/resume/${encodeURIComponent(userId)}`, {
+      method: 'POST'
+    });
+
+    io.emit('bot_resumed', { userId });
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error devolviendo conversación al bot:', error.message);
+    res.status(500).json({ error: 'Error devolviendo conversación al bot: ' + error.message });
+  }
+});
+
 app.post('/api/chats/:userId/finish', authenticateToken, async (req, res) => {
   const { userId } = req.params;
 
   try {
     // Enviar "MUCHAS GRACIAS" via bot API
-    const botPort = getBotApiPort();
-    const response = await fetch(`http://127.0.0.1:${botPort}/message/sendMessage/${AGENT_ID}`, {
+    await callBotApi(`/message/sendMessage/${AGENT_ID}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ chatId: userId, message: 'MUCHAS GRACIAS' })
     });
 
-    if (!response.ok) {
-      const err = await response.text();
-      throw new Error(`Bot API error: ${err}`);
-    }
+    await callBotApi(`/resume/${encodeURIComponent(userId)}`, {
+      method: 'POST'
+    });
 
     io.emit('bot_resumed', { userId });
     res.json({ success: true });

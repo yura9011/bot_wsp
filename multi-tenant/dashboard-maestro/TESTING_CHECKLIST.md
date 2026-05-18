@@ -70,6 +70,19 @@ DASHBOARD_MAESTRO_BACKUP_SCRIPT=scripts/backup-testing.sh
 - [x] Confirmar que incluye runtime data y `.wwebjs_auth/`.
 - [x] Confirmar que restore desde UI no existe.
 
+## Human dashboard handoff
+
+Validar en `demo-local` / dashboard `5011`, no en Santa Ana producción.
+
+- [ ] El panel muestra `Tomar conversación`, `Devolver al bot`, `Enviar` y `MUCHAS GRACIAS`.
+- [ ] Al seleccionar un chat, el estado visible es `Bot activo`, `Esperando humano` o `Atendido por humano`.
+- [ ] `Tomar conversación` pausa el usuario en `data/demo-local/pausas.json` con razón `atendido_desde_dashboard`.
+- [ ] Mientras el usuario está pausado, un mensaje entrante no dispara respuesta automática del bot.
+- [ ] `Enviar` manda un mensaje humano al WhatsApp cliente.
+- [ ] `Devolver al bot` reanuda el usuario y el siguiente mensaje vuelve a ser respondido por el bot.
+- [ ] `MUCHAS GRACIAS` envía el texto final y reanuda el bot.
+- [ ] Producción Santa Ana sigue read-only y sin acciones operativas.
+
 ## Persistence checks
 
 - [x] Audit events persisten en `data/dashboard-maestro/audit-events.json`.

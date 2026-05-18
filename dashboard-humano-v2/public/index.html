@@ -59,7 +59,11 @@
         <div id="conversationContainer" class="conversation-container" style="display: none;">
           <div class="conversation-header">
             <h3 id="chatName">Cliente</h3>
-            <span id="chatStatus" class="status-badge">🔴 Esperando</span>
+            <div class="conversation-header-actions">
+              <span id="chatStatus" class="status-badge bot">Bot activo</span>
+              <button id="takeBtn" class="btn-handoff" aria-label="Tomar conversación">Tomar conversación</button>
+              <button id="resumeBtn" class="btn-resume" aria-label="Devolver conversación al bot">Devolver al bot</button>
+            </div>
           </div>
           <div id="messagesContainer" class="messages-container"></div>
           <div class="input-container">

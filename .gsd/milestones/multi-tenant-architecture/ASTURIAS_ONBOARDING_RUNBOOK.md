@@ -23,7 +23,8 @@
 - No levantar PM2 nuevo antes del QR.
 - No copiar historial ni pausas desde Santa Ana.
 - No tocar `bot_dolce` producción sin backup vigente y confirmación explícita.
-- Si se activa primero en testing, usar overrides/puertos testing y no mezclar con Santa Ana producción.
+- Decisión actual: no activar Asturias en testing; preparar alta directa a producción cuando el QR esté disponible.
+- Si más adelante se decide probar en testing, usar overrides/puertos testing y no mezclar con Santa Ana producción.
 - Mientras QR esté pendiente, Maestro debe mostrar Asturias como `pending-qr`, no como agente activo ni alerta.
 
 ## Pre-Checklist
@@ -53,9 +54,9 @@ git commit -m "config(asturias): prepare whatsapp number"
 git push origin main
 ```
 
-## Alta En Testing Primero
+## Alta En Testing Opcional
 
-Objetivo: validar QR, bot, dashboard y flujo sin afectar Santa Ana producción.
+Estado actual: no usar este camino salvo decisión explícita. Objetivo si se habilita: validar QR, bot, dashboard y flujo sin afectar Santa Ana producción.
 
 1. En VPS testing:
    ```bash
