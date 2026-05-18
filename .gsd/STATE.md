@@ -4,6 +4,18 @@
 
 ## Last Session Summary
 
+Sesión audio/transcripción inicial:
+
+- Se preparó soporte opcional para transcribir audios de WhatsApp con transcriptor local CPU-only en el VPS.
+- Feature flag: `ENABLE_AUDIO_TRANSCRIPTION=true`, `AUDIO_TRANSCRIPTION_PROVIDER=local` y `AUDIO_TRANSCRIPTION_COMMAND`; si faltan, el bot pide texto como antes.
+- Script base: `scripts/transcribe-audio-local.py` usando `faster-whisper`, modelo default `base`, device `cpu`, compute `int8`.
+- El handoff se respeta antes de cualquier respuesta automática a texto o media: si el chat está pausado/tomado, el bot no responde.
+- Imágenes, videos, documentos, ubicación y stickers siguen fuera de alcance operativo; el bot pide texto.
+- Ubicación ahora usa `agent.config.info.direccion` en vez de una dirección hardcodeada.
+- Validación local: `node --check` OK en `lib/agent-manager.js` y `lib/audio-transcription.js`.
+
+## Last Session Summary (anterior)
+
 Sesión handoff formal dashboard humano:
 
 - Implementación en `dashboard-humano-v2` para demo/testing.
