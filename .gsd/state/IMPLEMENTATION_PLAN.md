@@ -8,9 +8,15 @@
 
 **Project**: exp010-whatsappbot
 **Phase**: Multi-Tenant Fase 2 - Dashboard Maestro MVP + Preparación Integración Santa Ana
-**Last Updated**: 2026-05-17
+**Last Updated**: 2026-05-19
 
 > **Objetivo activo**: Dashboard Maestro MVP sigue siendo la Fase 2 vigente. Se suma preparación para integrar Santa Ana producción al modelo multi-tenant (read-only primero).
+>
+> **Santa Ana estructura multi-tenant read-only (2026-05-19)**: se prepara la fuente activa del Maestro en `multi-tenant/clients/` con `dolce-party/santa-ana` como producción `readOnly`, `dolce-party/asturias` como `pending-qr` e `internal-demo/demo-local` para testing. El runtime del bot sigue leyendo `config/agents.json`; activación del Maestro por `DASHBOARD_MAESTRO_AGENT_SOURCE_MODE=clients`.
+>
+> **Santa Ana runtime multi-tenant preparado (2026-05-19)**: el runtime actual ahora puede leer `AGENTS_CONFIG_PATH`, resolver rutas absolutas de `data/logs/catalog/auth`, desactivar dashboard hijo con `ORCHESTRATOR_START_DASHBOARDS=false` y ejecutar procesos PM2 nuevos desde `multi-tenant/clients/dolce-party/ecosystem.config.js`. No se ejecutó corte productivo ni PM2 en VPS.
+>
+> **Workflow agéntico reforzado (2026-05-19)**: `AGENTS.md` ahora exige lookup de código fuente local antes de implementar contra WhatsApp, alertas/LLM, PM2, deploy o runtime; `repos/` queda como fuente local actual y `npx opensrc <paquete-o-repo>` como mecanismo para fuentes faltantes. PM2 requiere leer fuente de `unitech/pm2` antes de tocar lifecycle/deploy si no está local. También se agregó guardrail de paquetes nuevos (<14 días requiere aprobación) y review loop con confidence score para PRs de service layer. Skill `improve-codebase-architecture` actualizado para usar GSD como fallback de vocabulario/decisiones y producir candidatos PR-sized.
 >
 > **Demo comercial neutral (2026-05-17)**: implementación desplegada y probada en `bot_testing` para `demo-local`. Tiene flujo propio, mensaje informativo inicial y una sola ronda corta; no entra al flujo Dolce Party. `bot-demo-local` reiniciado, `/status` responde `connected` y prueba WhatsApp manual OK.
 >
@@ -85,6 +91,7 @@
   - Progreso 2026-05-17: adapter preparado para sumar futuros `multi-tenant/clients/*/agents.json` read-only, con `clientId` y metadatos de fuente.
   - Progreso 2026-05-17: adapter aplica `config/agents.override.json` read-only para que testing use puertos 4011/4001 y 4012/4003.
   - Progreso 2026-05-17: adapter soporta `enabledOverrides` para apagar agentes no activos en testing sin mutar `config/agents.json`.
+  - Progreso 2026-05-19: adapter soporta `DASHBOARD_MAESTRO_AGENT_SOURCE_MODE=root|clients|merged`; default `root`. `clients` lee `multi-tenant/clients/*/client.json` y `agents.json` para activar la estructura nueva solo en Maestro.
 
 - [x] **2.3 Health Collection**
   - Detectar API bot up/down
@@ -180,10 +187,12 @@
 - `.gsd/milestones/multi-tenant-architecture/AGENT_ONBOARDING_CHECKLIST.md` — checklist reusable para futuros agentes/clientes
 - `.gsd/milestones/multi-tenant-architecture/MAESTRO_EXPOSURE_PLAN.md` — plan de exposición segura con HTTPS/auth
 - `.gsd/milestones/multi-tenant-architecture/HUMAN_DASHBOARD_BASELINE.md` — baseline del dashboard humano y gap de handoff formal
-- `multi-tenant/clients/README.md` — estructura futura explicada
+- `multi-tenant/clients/README.md` — estructura activa del Maestro explicada
 - `multi-tenant/clients/dolce-party.example.json` — ejemplo conceptual (no activo)
+- `multi-tenant/clients/dolce-party/` — fuente activa Maestro para Santa Ana read-only y Asturias pending QR
+- `multi-tenant/clients/internal-demo/` — fuente activa Maestro para demo-local testing
 
-**No se creó config activa que el Maestro pueda leer.** El ejemplo es `.example.json`.
+**Ahora existe config activa para Maestro en `multi-tenant/clients/`.** No cambia el runtime del bot hasta activar `DASHBOARD_MAESTRO_AGENT_SOURCE_MODE=clients` en el Maestro.
 
 ### Fases del Checklist
 
@@ -208,6 +217,27 @@
 - No tocar `bot_dolce` runtime data.
 - PM2 control producción sigue bloqueado hasta decisión explícita, backup productivo y ventana controlada.
 - Nuevos clientes se gestionarán por script/config primero, luego por Maestro.
+
+---
+
+## 📋 Milestone: Santa Ana Runtime Multi-Tenant
+
+**Objetivo**: preparar el corte directo de Santa Ana a ejecución multi-tenant sin mover runtime data ni `.wwebjs_auth/`.
+
+**Estado 2026-05-19**:
+- [x] Runtime actual acepta `AGENTS_CONFIG_PATH` y `AGENTS_OVERRIDE_PATH`.
+- [x] Dashboard humano resuelve `DATA_PATH` desde `agent.paths.data`.
+- [x] `AgentManager` resuelve rutas absolutas/relativas para `data`, `logs`, `catalog` y `auth`.
+- [x] `LocalAuth` usa `paths.auth` o `WWEBJS_AUTH_PATH`.
+- [x] `ORCHESTRATOR_START_DASHBOARDS=false` permite bot y dashboard humano como PM2 separados.
+- [x] `multi-tenant/clients/dolce-party/ecosystem.config.js` define `bot-dolce-mt-prd` y `dashboard-humano-santa-ana-mt`.
+- [x] Runbook creado: `multi-tenant/clients/dolce-party/CUTOVER_SANTA_ANA.md`.
+- [ ] Ejecutar pre-check en VPS.
+- [ ] Ejecutar backup productivo nuevo.
+- [ ] Ejecutar corte PM2 directo con usuario presente.
+- [ ] Verificar WhatsApp, dashboard humano y rollback.
+
+**Regla**: no detener `bot-dolce-prd` ni `dashboard-humano-santa-ana` sin confirmación operativa en la ventana de corte.
 
 ---
 
@@ -627,6 +657,6 @@ The multi-tenant implementation will be considered successful when:
 
 ---
 
-**Last Updated**: 2026-05-17
-**Status**: Dashboard Maestro MVP — Fase 0 testing cerrada: persistencia, UI testing, backup-now y PM2 control demo validados. Santa Ana producción queda read-only.
+**Last Updated**: 2026-05-19
+**Status**: Dashboard Maestro MVP — Fase 0 testing cerrada: persistencia, UI testing, backup-now y PM2 control demo validados. Santa Ana producción queda read-only. Workflow agéntico reforzado para source lookup, PM2, supply chain y review loop antes de próximos service-layer PRs.
 **Next Milestone Review**: Fase 1 de SANTA_ANA_MIGRATION_CHECKLIST.md (backup manual producción + registro sin modificar procesos)

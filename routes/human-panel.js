@@ -4,12 +4,13 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
+const { loadAgentsConfig: loadRuntimeAgentsConfig } = require('../lib/agent-config');
+const { resolveRuntimePath } = require('../lib/runtime-paths');
 
 // ─── HELPERS ─────────────────────────────────────────────────
 
 function loadAgentsConfig() {
-    const configPath = path.join(__dirname, '..', 'config', 'agents.json');
-    return JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    return loadRuntimeAgentsConfig().config;
 }
 
 // ─── GET HANDOFFS ACTIVOS ──────────────────────────────────────
@@ -25,7 +26,7 @@ router.get('/:id/handoffs', async (req, res) => {
         }
 
         // Leer archivo de pausas
-        const pausasPath = path.join(__dirname, '..', agent.paths.data, 'pausas.json');
+        const pausasPath = path.join(resolveRuntimePath(agent.paths.data), 'pausas.json');
         
         if (!fs.existsSync(pausasPath)) {
             return res.json({ handoffs: [] });

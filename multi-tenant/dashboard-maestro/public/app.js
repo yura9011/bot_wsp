@@ -37,7 +37,7 @@ function renderAgents(payload) {
   agentCounter.textContent = pendingCount
     ? `${enabledCount} activos · ${pendingCount} pendiente QR · ${disabledCount} off`
     : `${enabledCount} activos · ${disabledCount} off`;
-  lastRefresh.textContent = `Última actualización: ${new Date(payload.loadedAt).toLocaleString()} · Fuente: ${payload.source}`;
+  lastRefresh.textContent = `Última actualización: ${new Date(payload.loadedAt).toLocaleString()} · Modo: ${payload.sourceMode || 'root'} · Fuente: ${payload.source}`;
   renderGlobalStatus(payload.health);
   renderAlerts(payload.alerts);
   renderMetricsSummary(payload.metrics);
@@ -52,7 +52,8 @@ function renderAgents(payload) {
     <tr class="${agent.status === 'pending-qr' ? 'agent-pending' : agent.enabled ? '' : 'agent-disabled'}">
       <td><strong>${escapeHtml(agent.id)}</strong></td>
       <td>
-        ${escapeHtml(agent.clientId || 'actual')}<br>
+        ${escapeHtml(agent.clientName || agent.clientId || 'actual')}<br>
+        <small>${escapeHtml(agent.clientId || 'sin-client-id')}</small><br>
         <span class="env-badge ${escapeHtml(agent.environment || 'testing')}">${escapeHtml(agent.environment || 'testing')}</span>
         ${agent.readOnly ? '<span class="env-badge readonly">read-only</span>' : ''}
         ${agent.status === 'pending-qr' ? '<span class="env-badge pending-qr">pendiente QR</span>' : ''}

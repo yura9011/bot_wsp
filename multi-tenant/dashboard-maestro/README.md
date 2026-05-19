@@ -8,8 +8,8 @@ App interna para monitorear agentes existentes sin reemplazar `dashboard-central
 - Acceso interno con HTTP Basic Auth.
 - UI estática desktop-first.
 - Endpoint propio `GET /health`.
-- Adapter read-only que lee `config/agents.json`.
-- Compatibilidad read-only con futuros `multi-tenant/clients/*/agents.json`.
+- Adapter read-only que lee `config/agents.json` por defecto.
+- Fuente multi-tenant activa para Maestro en `multi-tenant/clients/*/agents.json` cuando `DASHBOARD_MAESTRO_AGENT_SOURCE_MODE=clients`.
 - Tabla de agentes con id, nombre, enabled, puertos y paths.
 - Health collection read-only para bot API y dashboard humano, visible en la tabla.
 - Alertas visibles derivadas de health para bot API y dashboard humano caídos.
@@ -90,8 +90,20 @@ Las métricas IA/costo quedan como `Sin datos` hasta instrumentar tokens, llamad
 - `DASHBOARD_MAESTRO_BACKUP_TIMEOUT_MS`: timeout de backup-now. Default `120000` ms.
 - `AGENTS_CONFIG_PATH`: path alternativo para leer agentes. Default `config/agents.json` del repo.
 - `AGENTS_OVERRIDE_PATH`: path alternativo para overrides de puertos y procesos PM2. Default `config/agents.override.json` junto al config.
-- `CLIENTS_DIR`: path alternativo para buscar futuros `clients/*/agents.json`. Default `multi-tenant/clients`.
+- `CLIENTS_DIR`: path alternativo para buscar `clients/*/agents.json`. Default `multi-tenant/clients`.
+- `DASHBOARD_MAESTRO_AGENT_SOURCE_MODE`: fuente de agentes para Maestro. Valores: `root` (default), `clients`, `merged`.
 - `CORS_ORIGIN`: origen permitido para Socket.IO. Default `*`.
+
+## Modo multi-tenant clients
+
+Para validar Santa Ana en la estructura nueva sin cambiar el runtime del bot:
+
+```powershell
+$env:DASHBOARD_MAESTRO_AGENT_SOURCE_MODE="clients"; npm start
+```
+
+En este modo el Maestro lee `multi-tenant/clients/dolce-party/agents.json` y `multi-tenant/clients/internal-demo/agents.json`.
+Santa Ana queda como `readOnly: true`, Asturias como `pending-qr` y demo-local conserva controles de testing.
 
 ## Overrides de testing
 

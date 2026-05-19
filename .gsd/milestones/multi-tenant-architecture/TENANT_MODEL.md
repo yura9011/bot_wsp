@@ -1,7 +1,7 @@
 # Modelo Tenant — Cliente → Agente
 
 > Documenta la relación entre clientes y agentes/locales en el sistema multi-tenant.
-> Última actualización: 2026-05-17
+> Última actualización: 2026-05-19
 
 ## Conceptos
 
@@ -102,21 +102,21 @@ Cliente (1)
 
 Santa Ana es el agente productivo actual. No se migra moviendo archivos ni modificando su runtime. El proceso es:
 
-1. **Registro read-only**: el Maestro lista Santa Ana leyendo `config/agents.json` sin modificar nada.
+1. **Registro read-only**: el Maestro lista Santa Ana desde `multi-tenant/clients/dolce-party/agents.json` cuando `DASHBOARD_MAESTRO_AGENT_SOURCE_MODE=clients`.
 2. **Health checks**: el Maestro consulta el bot API y dashboard humano de Santa Ana en sus puertos actuales.
-3. **Métricas**: el Maestro lee `data/santa-ana/estadisticas.json` sin escribir.
+3. **Métricas**: el Maestro lee `/home/forma/bot_dolce/data/estadisticas.json` y `/home/forma/bot_dolce/data/pausas.json` sin escribir.
 4. **PM2 control**: deshabilitado inicialmente. Solo se habilita después de probar en testing y validar nombres PM2 reales.
 
 No se mueve `data/santa-ana/` ni se cambian sus rutas. La integración es por referencia, no por copia.
 
-## Migración Futura
+## Estructura Activa Para Maestro
 
-Cuando un nuevo cliente se incorpora al sistema multi-tenant, su configuración vivirá en:
+La estructura por cliente ya existe como fuente del Dashboard Maestro:
 
 ```text
 multi-tenant/clients/{clientId}/
   ├── client.json       → datos del cliente
-  └── agents.json       → agentes del cliente
+  └── agents.json       → agentes del cliente observados por Maestro
 ```
 
-Esta estructura es **futura** y no está activa. Durante el MVP, el Maestro lee desde `config/agents.json`.
+Durante esta etapa, solo el Maestro lee esa estructura. El runtime del bot y los dashboards humanos siguen usando `config/agents.json` y sus variables actuales.

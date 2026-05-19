@@ -9,6 +9,8 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const { authenticateToken, JWT_SECRET } = require('./middleware/auth');
+const { findAgentConfig } = require('../lib/agent-config');
+const { resolveRuntimePath } = require('../lib/runtime-paths');
 
 console.log('🚀 Iniciando Dashboard Humano v2 - VERSIÓN CORREGIDA');
 
@@ -23,12 +25,15 @@ const CONFIG_AGENT_ID = process.env.CONFIG_AGENT_ID || AGENT_ID;
 const IS_TESTING = process.env.NODE_ENV === 'development';
 
 // Paths
-const CONFIG_PATH = path.join(__dirname, '../config/agents.json');
-const DATA_PATH = path.join(__dirname, `../data/${AGENT_ID}`);
+const CONFIG_PATH = process.env.AGENTS_CONFIG_PATH || path.join(__dirname, '../config/agents.json');
+const STARTUP_AGENT = resolveDashboardAgentConfig();
+const DATA_PATH = process.env.DATA_PATH
+  ? resolveRuntimePath(process.env.DATA_PATH)
+  : resolveRuntimePath(STARTUP_AGENT?.paths?.data || path.join('data', AGENT_ID));
 const HISTORIAL_PATH = path.join(DATA_PATH, 'historial.json');
 const PAUSAS_PATH = path.join(DATA_PATH, 'pausas.json');
 const ADMIN_NUMBERS_PATH = path.join(DATA_PATH, 'admin-numbers.json');
-const PHONE_MAP_PATH = path.join(__dirname, '../config/phone-map.json');
+const PHONE_MAP_PATH = resolveRuntimePath(process.env.PHONE_MAP_PATH || path.join('config', 'phone-map.json'));
 
 // Middleware
 app.use(cors());
@@ -49,13 +54,16 @@ const loginLimiter = rateLimit({
 
 function leerConfig() {
   try {
-    const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
-    const agent = config.agents.find(a => a.id === CONFIG_AGENT_ID);
-    return agent;
+    return resolveDashboardAgentConfig();
   } catch (error) {
     console.error('Error leyendo config:', error);
     return null;
   }
+}
+
+function resolveDashboardAgentConfig() {
+  const { agent } = findAgentConfig(CONFIG_AGENT_ID, { configPath: CONFIG_PATH });
+  return agent || null;
 }
 
 function getBotApiPort() {

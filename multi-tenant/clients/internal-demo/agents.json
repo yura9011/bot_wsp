@@ -1,0 +1,35 @@
+{
+  "agents": [
+    {
+      "id": "demo-local",
+      "clientId": "internal-demo",
+      "name": "Demo - Nuevos Clientes",
+      "enabled": true,
+      "status": "active",
+      "environment": "testing",
+      "readOnly": false,
+      "whatsappSession": "demo-session",
+      "ports": {
+        "api": 5010,
+        "dashboard": 5011
+      },
+      "paths": {
+        "data": "data/demo-local",
+        "logs": "logs/demo-local",
+        "catalog": "catalogs/catalogo-demo.js"
+      },
+      "info": {
+        "telefono": "11 7145-8944",
+        "horario": "Disponible para consultas comerciales",
+        "direccion": "Demo del sistema de atencion por WhatsApp"
+      },
+      "pm2": {
+        "bot": "bot-demo-local",
+        "dashboard": null
+      },
+      "links": {
+        "dashboard": "http://2.24.89.243:5011"
+      }
+    }
+  ]
+}

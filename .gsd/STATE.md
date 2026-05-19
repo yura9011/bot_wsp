@@ -1,8 +1,44 @@
 # Project State
 
-> Last updated: 17/05/2026
+> Last updated: 19/05/2026
 
 ## Last Session Summary
+
+Sesión preparación runtime Santa Ana multi-tenant:
+
+- El runtime actual se adaptó para leer agentes desde `AGENTS_CONFIG_PATH` y overrides desde `AGENTS_OVERRIDE_PATH`.
+- `orchestrator.js` soporta `ORCHESTRATOR_START_DASHBOARDS=false` para correr bot y dashboard humano como PM2 separados.
+- `AgentManager` resuelve rutas absolutas/relativas para `data`, `logs`, `catalog` y `.wwebjs_auth`.
+- `dashboard-humano-v2` resuelve `DATA_PATH` desde `agent.paths.data` de la config activa.
+- `multi-tenant/clients/dolce-party/agents.json` ahora tiene runtime config completa para Santa Ana: `paths.auth`, `dashboardUsers`, `adminNumbers` y PM2 nuevos.
+- Se agregó `multi-tenant/clients/dolce-party/ecosystem.config.js` con `bot-dolce-mt-prd` y `dashboard-humano-santa-ana-mt`.
+- Se agregó runbook `multi-tenant/clients/dolce-party/CUTOVER_SANTA_ANA.md`.
+- Verificación local OK; no se ejecutó corte productivo ni PM2 en VPS.
+
+## Last Session Summary (anterior)
+
+Sesión migración read-only Santa Ana a estructura Maestro multi-tenant:
+
+- Se agregó fuente activa para Dashboard Maestro en `multi-tenant/clients/`.
+- `dolce-party/santa-ana` queda registrado como producción `readOnly` por referencia a `/home/forma/bot_dolce`, sin mover runtime data.
+- `dolce-party/asturias` queda como `pending-qr`, sin health real ni acciones.
+- `internal-demo/demo-local` queda separado para testing y PM2 control seguro.
+- `agent-registry` soporta `DASHBOARD_MAESTRO_AGENT_SOURCE_MODE=root|clients|merged`; default `root` para compatibilidad.
+- El runtime del bot sigue leyendo `config/agents.json`; activación VPS queda para paso posterior explícito.
+
+## Last Session Summary (anterior)
+
+Sesión AGENTS + workflow agéntico:
+
+- `AGENTS.md` reforzado para exigir lookup de código fuente antes de implementar contra WhatsApp, alertas/LLM, PM2, deploy o runtime de dashboards.
+- Se documentó el uso actual de `repos/` como fuente local y `npx opensrc <paquete-o-repo>` como mecanismo para traer fuente adicional cuando falte.
+- PM2 queda con regla específica: antes de tocar control/deploy/lifecycle, leer fuente local o traer `unitech/pm2` con `npx opensrc`; Linux VPS manda sobre inferencias desde Windows.
+- Se agregó guardrail de supply chain: no instalar paquetes con menos de 14 días de vida sin aprobación explícita.
+- Se agregó review loop para PRs de service layer, con lectura del diff, fixes acotados, verificación y confidence score 1-5.
+- Skill `.agents/skills/improve-codebase-architecture` actualizado para usar GSD como fallback si no existen `CONTEXT.md`/ADRs y para proponer candidatos PR-sized sin implementar durante discovery.
+- Sin cambios de producto, runtime, VPS ni datos protegidos.
+
+## Last Session Summary (anterior)
 
 Sesión LLM provider OpenRouter:
 

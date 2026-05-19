@@ -1,0 +1,87 @@
+{
+  "agents": [
+    {
+      "id": "santa-ana",
+      "clientId": "dolce-party",
+      "name": "Dolce Party - Santa Ana",
+      "enabled": true,
+      "status": "active",
+      "environment": "production",
+      "readOnly": true,
+      "whatsappSession": "santa-ana-session",
+      "ports": {
+        "api": 3011,
+        "dashboard": 3001
+      },
+      "paths": {
+        "data": "/home/forma/bot_dolce/data/santa-ana",
+        "logs": "/home/forma/bot_dolce/logs/santa-ana",
+        "catalog": "/home/forma/bot_dolce/catalogs/catalogo-santa-ana.js",
+        "auth": "/home/forma/bot_dolce/.wwebjs_auth",
+        "stats": "/home/forma/bot_dolce/data/estadisticas.json",
+        "pauses": "/home/forma/bot_dolce/data/pausas.json"
+      },
+      "info": {
+        "telefono": "0351 855-9145",
+        "horario": "Lunes a Sabado: 9:00 a 20:00hs | Domingo: Cerrado",
+        "direccion": "Sta. Ana 2637, X5010EEK Cordoba"
+      },
+      "pm2": {
+        "bot": "bot-dolce-mt-prd",
+        "dashboard": "dashboard-humano-santa-ana-mt"
+      },
+      "links": {
+        "dashboard": "http://2.24.89.243:3001/index.html"
+      },
+      "adminNumbers": ["5491158647529", "5493513782559"],
+      "dashboardUsers": [
+        {
+          "username": "admin",
+          "password": "$2b$10$DD7OGqlJlDinBTTofXkH.eC6BRra9Sk8JB6cowtOCvvJYjh3gtOeW",
+          "role": "admin",
+          "name": "Administrador"
+        },
+        {
+          "username": "maria",
+          "password": "$2b$10$uI4nSRBRg9rTqgcvC0jN4u3aLTDWf/rERGqs40oEeQ3rPqLoriG1y",
+          "role": "employee",
+          "name": "Maria Gonzalez"
+        },
+        {
+          "username": "forma",
+          "password": "$2b$10$SDQ2uAULwoI1kMSJ5bzCyeHseqlNeDM3y8raV.0rN4hI0MArHAFZO",
+          "role": "admin",
+          "name": "Forma"
+        }
+      ]
+    },
+    {
+      "id": "asturias",
+      "clientId": "dolce-party",
+      "name": "Dolce Party - Asturias",
+      "enabled": false,
+      "status": "pending-qr",
+      "environment": "testing",
+      "readOnly": true,
+      "whatsappSession": "asturias-session",
+      "ports": {
+        "api": 3012,
+        "dashboard": 3002
+      },
+      "paths": {
+        "data": "data/asturias",
+        "logs": "logs/asturias",
+        "catalog": "catalogs/catalogo-santa-ana.js"
+      },
+      "info": {
+        "telefono": "5493513114575",
+        "horario": "Lunes a Sabado: 9:00 a 20:00hs | Domingo: Cerrado",
+        "direccion": "Sta. Ana 2637, X5010EEK Cordoba"
+      },
+      "pm2": {
+        "bot": null,
+        "dashboard": null
+      }
+    }
+  ]
+}

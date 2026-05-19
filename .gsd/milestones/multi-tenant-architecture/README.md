@@ -1,13 +1,15 @@
 # Multi-Tenant Architecture
 
 > Current GSD source of truth for the multi-client platform.
-> Last updated: 2026-05-17
+> Last updated: 2026-05-19
 
 ## Status
 
 The current multi-agent production system stays stable. Multi-tenant work starts as a new app under `multi-tenant/dashboard-maestro/` and is tested in the VPS testing environment before any production replacement.
 
 Dashboard Maestro MVP completed its current testing sprint: persistencia JSON, UI testing, documentación modelo tenant, checklist migración Santa Ana, demo neutral, PM2 control testing validated with `demo-local`, and Santa Ana production read-only visibility.
+
+Santa Ana now has a Dashboard Maestro multi-tenant source under `multi-tenant/clients/dolce-party/`, activated only when `DASHBOARD_MAESTRO_AGENT_SOURCE_MODE=clients`. The bot runtime still reads `config/agents.json`.
 
 ## Current Documents
 
@@ -42,10 +44,10 @@ Cliente -> Agente/Local -> WhatsApp session + data + dashboard humano
 - Existing production (`bot_dolce`) remains stable until the new flow is proven.
 - Existing testing (`bot_testing`) is the proving ground.
 - Runtime data is sacred: do not touch histories, pauses, admin numbers, WhatsApp sessions, stats, logs, or production config without an explicit backup and instruction.
-- Santa Ana will be integrated first as read-only, without moving data or changing its runtime paths.
+- Santa Ana is integrated first as read-only in the Maestro client source, without moving data or changing its runtime paths.
 - New clients/agents will be managed by config/script first, then by Maestro.
 - Current Santa Ana dashboard humano remains the operational panel at port `3001`; Maestro should reference and monitor it first, not replace it.
 
 ## Next Action
 
-Keep Santa Ana production read-only in Maestro. Asturias is pending QR/onboarding; follow `ASTURIAS_ONBOARDING_RUNBOOK.md` when the phone is available. Maestro exposure needs domain/subdomain before implementation.
+Validate `DASHBOARD_MAESTRO_AGENT_SOURCE_MODE=clients` in testing by tunnel. Keep Santa Ana production read-only in Maestro. Asturias is pending QR/onboarding; follow `ASTURIAS_ONBOARDING_RUNBOOK.md` when the phone is available. Maestro exposure needs domain/subdomain before implementation.

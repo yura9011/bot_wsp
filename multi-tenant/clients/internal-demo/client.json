@@ -1,0 +1,7 @@
+{
+  "clientId": "internal-demo",
+  "clientName": "Demo interno",
+  "status": "active",
+  "readOnly": false,
+  "notes": "Cliente interno para testing comercial y controles seguros del Dashboard Maestro."
+}

@@ -87,6 +87,7 @@ El Maestro comienza a listar Santa Ana producción como agente observable:
 
 - [x] El Maestro (corriendo en testing) lista Santa Ana producción desde `config/agents.json`
   - 2026-05-17: listado como `additionalAgent` en `config/agents.override.json` con id `santa-ana-prod`.
+  - 2026-05-19: preparado como fuente activa multi-tenant en `multi-tenant/clients/dolce-party/agents.json` con id canónico `santa-ana`; activación por `DASHBOARD_MAESTRO_AGENT_SOURCE_MODE=clients`.
 - [x] Health check a bot API de Santa Ana (puerto 3011) funciona desde testing VPS
 - [x] Health check a dashboard humano de Santa Ana (puerto 3001) funciona
 - [x] Métricas read-only (`estadisticas.json`) se muestran correctamente

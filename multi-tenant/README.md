@@ -2,7 +2,7 @@
 
 **Versión**: 1.1 (Fase 2 Planificada)  
 **Fecha**: 2026-05-17  
-**Estado**: Fase 1 local completa; Fase 2 Dashboard Maestro planificada
+**Estado**: Fase 1 local completa; runtime Santa Ana preparado para corte multi-tenant
 
 ---
 
@@ -107,8 +107,9 @@ Ver el plan vigente en:
 - Dashboard humano mejorado
 - Control de acceso
 
-### ⏳ Fase 5: Migración (PENDIENTE)
-- Migrar Dolce Party a nueva estructura
+### 🔄 Fase 5: Migración (EN PREPARACIÓN)
+- Santa Ana preparado para ejecución multi-tenant con `AGENTS_CONFIG_PATH`
+- Corte documentado en `clients/dolce-party/CUTOVER_SANTA_ANA.md`
 - Migrar ambiente de testing
 
 ### ⏳ Fase 6: Documentación Final (PENDIENTE)

@@ -5,6 +5,7 @@ const REPO_ROOT = path.resolve(__dirname, '..', '..', '..');
 const DEFAULT_CONFIG_PATH = path.resolve(__dirname, '..', '..', '..', 'config', 'agents.json');
 const DEFAULT_OVERRIDE_PATH = path.resolve(__dirname, '..', '..', '..', 'config', 'agents.override.json');
 const DEFAULT_CLIENTS_DIR = path.resolve(__dirname, '..', '..', 'clients');
+const SOURCE_MODES = new Set(['root', 'clients', 'merged']);
 
 function normalizeAgent(agent, source) {
   const status = agent.status || agent.operationalStatus || (agent.enabled ? 'active' : 'disabled');
@@ -12,10 +13,11 @@ function normalizeAgent(agent, source) {
   return {
     id: agent.id,
     clientId: agent.clientId || source.clientId || null,
-    name: agent.name || agent.info?.nombre || agent.id,
+    clientName: agent.clientName || agent.client?.name || source.clientName || agent.clientId || source.clientId || null,
+    name: agent.name || agent.nombre || agent.info?.nombre || agent.id,
     enabled: Boolean(agent.enabled),
     status,
-    environment: agent.environment || agent.entorno || 'testing',
+    environment: agent.environment || agent.entorno || source.environment || 'testing',
     readOnly: Boolean(agent.readOnly),
     whatsappSession: agent.whatsappSession || null,
     ports: {
@@ -43,8 +45,11 @@ function normalizeAgent(agent, source) {
   };
 }
 
-function readAgents(configPath = process.env.AGENTS_CONFIG_PATH || DEFAULT_CONFIG_PATH) {
-  const overridePath = process.env.AGENTS_OVERRIDE_PATH || getDefaultOverridePath(configPath);
+function readAgents(configPathOrOptions = process.env.AGENTS_CONFIG_PATH || DEFAULT_CONFIG_PATH, maybeOptions = {}) {
+  const { configPath, options } = normalizeReadOptions(configPathOrOptions, maybeOptions);
+  const sourceMode = normalizeSourceMode(options.sourceMode || process.env.DASHBOARD_MAESTRO_AGENT_SOURCE_MODE || 'root');
+  const clientsDir = options.clientsDir || process.env.CLIENTS_DIR || DEFAULT_CLIENTS_DIR;
+  const overridePath = options.overridePath || process.env.AGENTS_OVERRIDE_PATH || getDefaultOverridePath(configPath);
   const overrides = readOverrides(overridePath);
   const rootSource = {
     type: 'root-config',
@@ -52,19 +57,23 @@ function readAgents(configPath = process.env.AGENTS_CONFIG_PATH || DEFAULT_CONFI
     clientId: null,
     overridePath: overrides ? relativeToRepo(overridePath) : null
   };
-  const rootAgents = readAgentsFromFile(configPath, rootSource, overrides);
-  const additionalAgents = readAdditionalAgents(overrides);
-  const clientSources = readClientSources(process.env.CLIENTS_DIR || DEFAULT_CLIENTS_DIR);
-  const agents = [
-    ...rootAgents,
-    ...additionalAgents,
-    ...clientSources.flatMap(source => readAgentsFromFile(source.fullPath, source))
-  ];
+  const rootAgents = sourceMode === 'clients'
+    ? []
+    : readAgentsFromFile(configPath, rootSource, overrides);
+  const additionalAgents = sourceMode === 'clients'
+    ? []
+    : readAdditionalAgents(overrides);
+  const clientSources = sourceMode === 'root'
+    ? []
+    : readClientSources(clientsDir);
+  const clientAgents = clientSources.flatMap(source => readAgentsFromFile(source.fullPath, source, overrides));
+  const agents = [...rootAgents, ...additionalAgents, ...clientAgents];
 
   return {
-    source: relativeToRepo(configPath),
+    source: describeSource(sourceMode, configPath, clientsDir),
+    sourceMode,
     sources: [
-      rootSource,
+      ...(sourceMode === 'clients' ? [] : [rootSource]),
       ...clientSources.map(({ fullPath, ...source }) => source)
     ],
     agents,
@@ -73,6 +82,25 @@ function readAgents(configPath = process.env.AGENTS_CONFIG_PATH || DEFAULT_CONFI
     disabledCount: agents.filter(agent => !agent.enabled).length,
     loadedAt: new Date().toISOString()
   };
+}
+
+function normalizeReadOptions(configPathOrOptions, maybeOptions) {
+  if (typeof configPathOrOptions === 'object' && configPathOrOptions !== null) {
+    return {
+      configPath: configPathOrOptions.configPath || process.env.AGENTS_CONFIG_PATH || DEFAULT_CONFIG_PATH,
+      options: configPathOrOptions
+    };
+  }
+
+  return {
+    configPath: configPathOrOptions,
+    options: maybeOptions || {}
+  };
+}
+
+function normalizeSourceMode(sourceMode) {
+  if (SOURCE_MODES.has(sourceMode)) return sourceMode;
+  return 'root';
 }
 
 function readAgentsFromFile(configPath, source, overrides = null) {
@@ -133,7 +161,8 @@ function readAdditionalAgents(overrides) {
   const source = {
     type: 'override-additional',
     path: 'config/agents.override.json',
-    clientId: null
+    clientId: null,
+    clientName: null
   };
 
   return overrides.additionalAgents.map(agent => normalizeAgent(agent, source));
@@ -153,15 +182,48 @@ function readClientSources(clientsDir) {
   return fs.readdirSync(clientsDir, { withFileTypes: true })
     .filter(entry => entry.isDirectory())
     .map(entry => {
-      const fullPath = path.join(clientsDir, entry.name, 'agents.json');
+      const clientDir = path.join(clientsDir, entry.name);
+      const fullPath = path.join(clientDir, 'agents.json');
+      return { clientDir, fullPath, fallbackClientId: entry.name };
+    })
+    .filter(source => fs.existsSync(source.fullPath))
+    .map(source => {
+      const client = readClientMetadata(source.clientDir, source.fallbackClientId);
       return {
         type: 'client-config',
-        path: relativeToRepo(fullPath),
-        fullPath,
-        clientId: entry.name
+        path: relativeToRepo(source.fullPath),
+        fullPath: source.fullPath,
+        clientId: client.clientId,
+        clientName: client.clientName,
+        environment: client.environment || null,
+        clientPath: relativeToRepo(path.join(source.clientDir, 'client.json'))
       };
-    })
-    .filter(source => fs.existsSync(source.fullPath));
+    });
+}
+
+function readClientMetadata(clientDir, fallbackClientId) {
+  const clientPath = path.join(clientDir, 'client.json');
+  if (!fs.existsSync(clientPath)) {
+    return {
+      clientId: fallbackClientId,
+      clientName: fallbackClientId,
+      environment: null
+    };
+  }
+
+  const raw = fs.readFileSync(clientPath, 'utf8');
+  const client = JSON.parse(raw);
+  return {
+    clientId: client.clientId || client.id || fallbackClientId,
+    clientName: client.clientName || client.name || client.nombre || client.clientId || fallbackClientId,
+    environment: client.environment || client.entorno || null
+  };
+}
+
+function describeSource(sourceMode, configPath, clientsDir) {
+  if (sourceMode === 'root') return relativeToRepo(configPath);
+  if (sourceMode === 'clients') return relativeToRepo(clientsDir);
+  return `${relativeToRepo(configPath)} + ${relativeToRepo(clientsDir)}`;
 }
 
 function withoutFullPath(source) {

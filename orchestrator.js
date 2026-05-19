@@ -1,37 +1,27 @@
 require("dotenv").config();
-const fs = require("fs");
 const path = require("path");
 const { spawn } = require("child_process");
 const AgentManager = require("./lib/agent-manager");
+const { loadAgentsConfig } = require("./lib/agent-config");
+
+function shouldStartDashboards() {
+  return process.env.ORCHESTRATOR_START_DASHBOARDS !== "false";
+}
 
 class BotOrchestrator {
   constructor() {
     this.agents = new Map();
     this.dashboards = new Map();
+    this.startDashboards = shouldStartDashboards();
     this.config = this.loadConfig();
   }
 
   loadConfig() {
-    const configPath = path.join(__dirname, "config", "agents.json");
-    if (!fs.existsSync(configPath)) {
-      throw new Error("Archivo config/agents.json no encontrado");
-    }
-    const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
-
-    // Aplicar overrides de puertos si existe agents.override.json (para entornos de testing)
-    const overridePath = path.join(__dirname, "config", "agents.override.json");
-    if (fs.existsSync(overridePath)) {
-      const override = JSON.parse(fs.readFileSync(overridePath, "utf8"));
-      if (override.portOverrides) {
-        config.agents.forEach(agent => {
-          if (override.portOverrides[agent.id]) {
-            agent.ports = { ...agent.ports, ...override.portOverrides[agent.id] };
-            console.log(`⚙️  Override de puertos para ${agent.id}: API=${agent.ports.api}, Dashboard=${agent.ports.dashboard}`);
-          }
-        });
-      }
-    }
-
+    const { config, configPath, overridePath } = loadAgentsConfig({
+      logger: message => console.log(`⚙️  ${message}`)
+    });
+    console.log(`📄 Config de agentes: ${configPath}`);
+    if (overridePath) console.log(`📄 Overrides de agentes: ${overridePath}`);
     return config;
   }
 
@@ -60,7 +50,11 @@ class BotOrchestrator {
     this.agents.set(agentId, agent);
     console.log(`✅ Agente ${agentId} iniciado correctamente`);
 
-    this.startDashboard(agentConfig);
+    if (this.startDashboards) {
+      this.startDashboard(agentConfig);
+    } else {
+      console.log(`📊 Dashboard de ${agentId} no iniciado por ORCHESTRATOR_START_DASHBOARDS=false`);
+    }
   }
 
   async stopAgent(agentId) {
@@ -73,7 +67,9 @@ class BotOrchestrator {
 
     console.log(`🛑 Deteniendo agente: ${agentId}`);
 
-    this.stopDashboard(agentId);
+    if (this.startDashboards) {
+      this.stopDashboard(agentId);
+    }
 
     await agent.stop();
     this.agents.delete(agentId);
@@ -166,7 +162,9 @@ class BotOrchestrator {
       const isRunning = this.agents.has(agentConfig.id);
       const status = isRunning ? "🟢 Corriendo" : (agentConfig.enabled ? "⚪ Detenido" : "🔴 Deshabilitado");
       
-      const dashboardStatus = this.dashboards.has(agentConfig.id) ? "📊 Dashboard activo" : "📭 Sin dashboard";
+      const dashboardStatus = this.startDashboards
+        ? (this.dashboards.has(agentConfig.id) ? "📊 Dashboard activo" : "📭 Sin dashboard")
+        : "📭 Dashboard externo";
       console.log(`${status} ${agentConfig.id} - ${agentConfig.name}`);
       console.log(`   API: http://localhost:${agentConfig.ports.api} | ${dashboardStatus}`);
       console.log(`   Dashboard: http://localhost:${agentConfig.ports.dashboard}`);
