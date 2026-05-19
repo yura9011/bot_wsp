@@ -8,6 +8,7 @@ const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const { authenticateToken, JWT_SECRET } = require('./middleware/auth');
 const { findAgentConfig } = require('../lib/agent-config');
 const { resolveRuntimePath } = require('../lib/runtime-paths');
@@ -156,7 +157,46 @@ function leerAdminNumbers() {
   } catch (error) {
     console.error('Error leyendo admin-numbers:', error);
   }
+
+  const envAdmins = getAdminNumbersFromEnv();
+  if (envAdmins.length > 0) {
+    return { admins: envAdmins };
+  }
+
+  const configAdmins = getAdminNumbersFromAgentConfig();
+  if (configAdmins.length > 0) {
+    return { admins: configAdmins };
+  }
+
   return { admins: [] };
+}
+
+function getAdminNumbersFromEnv() {
+  return (process.env.ADMIN_NUMBERS || '')
+    .split(',')
+    .map(id => id.trim())
+    .filter(Boolean)
+    .map(id => buildAdminNumberEntry(id, 'Migrado desde .env'));
+}
+
+function getAdminNumbersFromAgentConfig() {
+  const agent = leerConfig();
+  if (!agent?.adminNumbers || agent.adminNumbers.length === 0) return [];
+
+  return agent.adminNumbers
+    .map(id => String(id).trim())
+    .filter(Boolean)
+    .map(id => buildAdminNumberEntry(id, 'Default agents.json'));
+}
+
+function buildAdminNumberEntry(id, nombre) {
+  return {
+    id,
+    nombre,
+    rol: 'admin',
+    agregadoPor: 'runtime-config',
+    fechaAgregado: new Date().toISOString()
+  };
 }
 
 function guardarAdminNumbers(data) {

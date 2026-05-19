@@ -14,6 +14,9 @@ module.exports = {
         AGENTS_CONFIG_PATH,
         ORCHESTRATOR_START_DASHBOARDS: "false",
         WWEBJS_AUTH_PATH: "/home/forma/bot_dolce/.wwebjs_auth",
+        LLM_PROVIDER: "openrouter",
+        OPENROUTER_MODEL: "openrouter/owl-alpha",
+        LLM_ENABLE_GEMINI_FALLBACK: "false",
         LOG_FILE_PATH: "/home/forma/bot_dolce/logs/santa-ana/bot.log",
         SECURITY_LOG_PATH: "/home/forma/bot_dolce/logs/santa-ana/security.log"
       }
