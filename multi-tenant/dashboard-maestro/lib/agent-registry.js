@@ -50,23 +50,23 @@ function readAgents(configPathOrOptions = process.env.AGENTS_CONFIG_PATH || DEFA
   const sourceMode = normalizeSourceMode(options.sourceMode || process.env.DASHBOARD_MAESTRO_AGENT_SOURCE_MODE || 'root');
   const clientsDir = options.clientsDir || process.env.CLIENTS_DIR || DEFAULT_CLIENTS_DIR;
   const overridePath = options.overridePath || process.env.AGENTS_OVERRIDE_PATH || getDefaultOverridePath(configPath);
-  const overrides = readOverrides(overridePath);
+  const rootOverrides = readOverrides(overridePath);
   const rootSource = {
     type: 'root-config',
     path: relativeToRepo(configPath),
     clientId: null,
-    overridePath: overrides ? relativeToRepo(overridePath) : null
+    overridePath: rootOverrides ? relativeToRepo(overridePath) : null
   };
   const rootAgents = sourceMode === 'clients'
     ? []
-    : readAgentsFromFile(configPath, rootSource, overrides);
+    : readAgentsFromFile(configPath, rootSource, rootOverrides);
   const additionalAgents = sourceMode === 'clients'
     ? []
-    : readAdditionalAgents(overrides);
+    : readAdditionalAgents(rootOverrides);
   const clientSources = sourceMode === 'root'
     ? []
     : readClientSources(clientsDir);
-  const clientAgents = clientSources.flatMap(source => readAgentsFromFile(source.fullPath, source, overrides));
+  const clientAgents = clientSources.flatMap(source => readClientAgents(source));
   const agents = [...rootAgents, ...additionalAgents, ...clientAgents];
 
   return {
@@ -109,6 +109,19 @@ function readAgentsFromFile(configPath, source, overrides = null) {
   return Array.isArray(config.agents)
     ? config.agents.map(agent => normalizeAgent(applyAgentOverride(agent, overrides), withoutFullPath(source)))
     : [];
+}
+
+function readClientAgents(source) {
+  const overridePath = path.join(path.dirname(source.fullPath), 'agents.override.json');
+  const overrides = readOverrides(overridePath);
+  const sourceWithOverride = overrides
+    ? {
+        ...source,
+        overridePath: relativeToRepo(overridePath)
+      }
+    : source;
+
+  return readAgentsFromFile(source.fullPath, sourceWithOverride, overrides);
 }
 
 function applyAgentOverride(agent, overrides) {

@@ -54,6 +54,14 @@ function withTempRegistry(fn) {
         }
       ]
     }));
+    fs.writeFileSync(overridePath, JSON.stringify({
+      enabledOverrides: {
+        'santa-ana': false
+      },
+      portOverrides: {
+        'santa-ana': { api: 4011, dashboard: 4001 }
+      }
+    }));
 
     return fn({ configPath, clientsDir, overridePath });
   } finally {
@@ -78,6 +86,8 @@ test('clients source mode reads active client configs only', () => withTempRegis
   assert.deepEqual(registry.agents.map(agent => agent.id), ['santa-ana', 'asturias']);
   assert.equal(registry.agents[0].clientId, 'dolce-party');
   assert.equal(registry.agents[0].clientName, 'Dolce Party');
+  assert.equal(registry.agents[0].enabled, true);
+  assert.deepEqual(registry.agents[0].ports, { api: 3011, dashboard: 3001 });
   assert.equal(registry.sources[0].clientName, 'Dolce Party');
 }));
 
