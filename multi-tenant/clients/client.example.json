@@ -1,0 +1,8 @@
+{
+  "_comment": "Example only. Active clients use clients/{clientId}/client.json and agents.json.",
+  "clientId": "example-client",
+  "clientName": "Example Client",
+  "status": "draft",
+  "readOnly": true,
+  "notes": "Replace with non-sensitive public metadata only."
+}

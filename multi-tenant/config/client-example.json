@@ -1,21 +1,20 @@
 {
-  "client_id": "dolce-party",
-  "name": "Dolce Party",
-  "enabled": true,
-  "created": "2026-05-10T00:00:00Z",
-  "ports": {
-    "dashboard": 5000,
-    "bots": [5001, 5002]
-  },
+  "client_id": "example-client",
+  "name": "Example Client",
+  "dashboard_port": 5000,
+  "bot_ports": [5001],
   "business": {
-    "name": "Dolce Party - Cotillón",
-    "phone": "+54351XXXXXXX",
-    "address": "Santa Ana, Córdoba",
-    "hours": "Lun-Sáb: 9-20hs"
+    "name": "Example Business",
+    "category": "demo",
+    "address": "Example address",
+    "phone": "Example phone",
+    "hours": "Example hours"
   },
-  "admins": ["+54351XXXXXXX"],
   "features": {
-    "voice_messages": false,
-    "payments": false
-  }
+    "ai_responses": true,
+    "human_handoff": true,
+    "analytics": true
+  },
+  "created_at": "2026-01-01T00:00:00.000Z",
+  "status": "draft"
 }

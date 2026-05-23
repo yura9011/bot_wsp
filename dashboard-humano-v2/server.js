@@ -21,7 +21,7 @@ const io = socketIo(server);
 
 // Configuración
 const PORT = process.env.DASHBOARD_HUMANO_PORT || 3001;
-const AGENT_ID = process.env.DASHBOARD_AGENT_ID || 'santa-ana';
+const AGENT_ID = process.env.DASHBOARD_AGENT_ID || 'demo-local';
 const CONFIG_AGENT_ID = process.env.CONFIG_AGENT_ID || AGENT_ID;
 const IS_TESTING = process.env.NODE_ENV === 'development';
 

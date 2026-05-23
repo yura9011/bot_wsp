@@ -3,10 +3,10 @@
     {
       "id": "demo-local",
       "clientId": "internal-demo",
-      "name": "Demo - Nuevos Clientes",
+      "name": "Demo - WhatsApp Automation",
       "enabled": true,
       "status": "active",
-      "environment": "testing",
+      "environment": "demo",
       "readOnly": false,
       "whatsappSession": "demo-session",
       "ports": {
@@ -16,19 +16,30 @@
       "paths": {
         "data": "data/demo-local",
         "logs": "logs/demo-local",
-        "catalog": "catalogs/catalogo-demo.js"
+        "catalog": "catalogs/catalogo-demo.js",
+        "auth": ".wwebjs_auth"
       },
       "info": {
-        "telefono": "11 7145-8944",
-        "horario": "Disponible para consultas comerciales",
-        "direccion": "Demo del sistema de atencion por WhatsApp"
+        "nombre": "Demo - WhatsApp Automation",
+        "telefono": "Demo",
+        "horario": "Demo environment",
+        "direccion": "Demo environment"
       },
+      "adminNumbers": [],
+      "dashboardUsers": [
+        {
+          "username": "admin",
+          "password": "$2b$10$DD7OGqlJlDinBTTofXkH.eC6BRra9Sk8JB6cowtOCvvJYjh3gtOeW",
+          "role": "admin",
+          "name": "Admin"
+        }
+      ],
       "pm2": {
         "bot": "bot-demo-local",
-        "dashboard": null
+        "dashboard": "dashboard-humano-demo-local"
       },
       "links": {
-        "dashboard": "http://2.24.89.243:5011"
+        "dashboard": "/index.html"
       }
     }
   ]

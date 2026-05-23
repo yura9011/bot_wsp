@@ -1,34 +1,25 @@
-# Clients Directory — Dashboard Maestro Multi-Tenant Sources
+# Multi-Tenant Clients
 
-> **ACTIVA SOLO PARA DASHBOARD MAESTRO**
->
-> El runtime del bot puede leer esta carpeta cuando se configura
-> `AGENTS_CONFIG_PATH=/home/forma/multi-tenant/clients/{clientId}/agents.json`.
-> El Dashboard Maestro puede leerla cuando se configura `DASHBOARD_MAESTRO_AGENT_SOURCE_MODE=clients`.
->
-> El modo default del Maestro sigue siendo `root`, por compatibilidad.
+Active client configs live here.
 
-## Propósito
+Current public config:
 
-Cada cliente tiene:
+- `internal-demo/`: demo tenant used to polish the product experience.
+
+Private or customer-specific configs must stay outside Git, preferably under `.private/`.
+
+Expected shape:
 
 ```text
 multi-tenant/clients/{clientId}/
-  ├── client.json       → metadatos del cliente
-  └── agents.json       → agentes del cliente observados por Maestro
+  client.json
+  agents.json
+  ecosystem.config.js
 ```
 
-## Fuentes Activas
+Rules:
 
-- `dolce-party/`: Santa Ana producción, Asturias pendiente de QR y runbook de corte runtime.
-- `internal-demo/`: demo-local para testing y controles seguros.
-
-Los archivos `.example.json` siguen siendo ejemplos y no son leídos por el Maestro.
-
-## Reglas
-
-- Los archivos activos deben llamarse `client.json` y `agents.json`.
-- Los archivos de ejemplo deben terminar en `.example.json` para evitar que el Maestro los lea.
-- No mover ni copiar runtime data productiva a esta carpeta.
-- Santa Ana producción se integra por referencia a sus rutas actuales en `/home/forma/bot_dolce`.
-- Cualquier control productivo debe seguir bloqueado por `readOnly: true` hasta una decisión explícita.
+- Do not commit real phone numbers, customer addresses, server paths, IPs or tokens.
+- Do not commit WhatsApp auth, runtime data or logs.
+- Prefer relative paths in `agents.json`.
+- If a PM2 ecosystem needs server paths, derive them from `__dirname` instead of hardcoding deployment paths.

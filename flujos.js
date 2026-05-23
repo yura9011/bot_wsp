@@ -2,10 +2,10 @@
 
 // Información de la sucursal
 const INFO_SUCURSAL = {
-  nombre: "Dolce Party - Santa Ana",
-  telefono: "0351 855-9145",
-  horario: "Lunes a Sábado: 9:00 a 20:00hs | Domingo: Cerrado",
-  direccion: "Sta. Ana 2637, X5010EEK Córdoba",
+  nombre: "Demo - WhatsApp Automation",
+  telefono: "Demo",
+  horario: "Demo environment",
+  direccion: "Demo environment",
 };
 
 // Links de seguimiento
@@ -80,7 +80,7 @@ function getInfoCorreoArgentinoRetirar() {
 Podés consultar el estado de tu pedido acá:
 ${LINKS.correoArgentino}
 
-⚠️ *Importante:* Si dice "Disponible para retiro en la sucursal Dolce Party", significa que ya está acá.
+⚠️ *Importante:* Si el operador confirma disponibilidad, el paquete ya está listo para retiro.
 
 *Para retirar:*
 • Venir con el *titular* y su *DNI*

@@ -1,4 +1,6 @@
 # GSD Project State Files (user-specific, not part of template)
+.gsd/
+.private/
 SPEC.md
 ROADMAP.md
 STATE.md
@@ -47,6 +49,11 @@ data/
 
 # Environment-specific config overrides (not for git)
 config/agents.override.json
+config/admin-numbers.json
+config/phone-map.json
+config/phone-aliases.json
+
+# Client/runtime configs that contain deployment-specific details belong in .private/
 
 # WhatsApp session
 .wwebjs_auth/
@@ -55,6 +62,12 @@ config/agents.override.json
 # Dependencies
 node_modules/
 vendor/
+
+# Local agent/reference workspaces
+.agents/
+repos/
+convex/
+skills-lock.json
 
 # Build outputs
 dist/

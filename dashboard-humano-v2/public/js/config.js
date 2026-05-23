@@ -242,7 +242,7 @@ function showAddModal() {
       <div class="modal-form">
         <div class="form-group">
           <label>Número de WhatsApp:</label>
-          <input type="text" id="newNumberId" placeholder="5491158647529" class="form-input" autocomplete="off">
+          <input type="text" id="newNumberId" placeholder="country-code-number" class="form-input" autocomplete="off">
           <small class="form-hint">Solo dígitos, sin espacios ni símbolos</small>
         </div>
         <div class="form-group">

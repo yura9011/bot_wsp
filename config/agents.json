@@ -1,87 +1,13 @@
 {
   "agents": [
     {
-      "id": "santa-ana",
-      "name": "Dolce Party - Santa Ana",
-      "enabled": true,
-      "whatsappSession": "santa-ana-session",
-      "ports": {
-        "api": 3011,
-        "dashboard": 3001
-      },
-      "paths": {
-        "data": "data/santa-ana",
-        "logs": "logs/santa-ana",
-        "catalog": "catalogs/catalogo-santa-ana.js"
-      },
-      "info": {
-        "nombre": "Dolce Party - Santa Ana",
-        "telefono": "0351 855-9145",
-        "horario": "Lunes a Sábado: 9:00 a 20:00hs | Domingo: Cerrado",
-        "direccion": "Sta. Ana 2637, X5010EEK Córdoba"
-      },
-      "adminNumbers": ["5491158647529", "5493513782559"],
-      "dashboardUsers": [
-        {
-          "username": "admin",
-          "password": "$2b$10$DD7OGqlJlDinBTTofXkH.eC6BRra9Sk8JB6cowtOCvvJYjh3gtOeW",
-          "role": "admin",
-          "name": "Administrador"
-        },
-        {
-          "username": "maria",
-          "password": "$2b$10$uI4nSRBRg9rTqgcvC0jN4u3aLTDWf/rERGqs40oEeQ3rPqLoriG1y",
-          "role": "employee",
-          "name": "María González"
-        },
-        {
-          "username": "forma",
-          "password": "$2b$10$SDQ2uAULwoI1kMSJ5bzCyeHseqlNeDM3y8raV.0rN4hI0MArHAFZO",
-          "role": "admin",
-          "name": "Forma"
-        }
-      ]
-    },
-    {
-      "id": "asturias",
-      "name": "Dolce Party - Asturias",
-      "enabled": true,
-      "whatsappSession": "asturias-session",
-      "ports": {
-        "api": 3012,
-        "dashboard": 3002
-      },
-      "paths": {
-        "data": "data/asturias",
-        "logs": "logs/asturias",
-        "catalog": "catalogs/catalogo-santa-ana.js"
-      },
-      "info": {
-        "nombre": "Dolce Party - Asturias",
-        "telefono": "5493513114575",
-        "horario": "Lunes a Sábado: 9:00 a 20:00hs | Domingo: Cerrado",
-        "direccion": "Sta. Ana 2637, X5010EEK Córdoba"
-      },
-      "adminNumbers": ["5491158647529", "5493513782559"],
-      "dashboardUsers": [
-        {
-          "username": "admin",
-          "password": "$2b$10$DD7OGqlJlDinBTTofXkH.eC6BRra9Sk8JB6cowtOCvvJYjh3gtOeW",
-          "role": "admin",
-          "name": "Administrador"
-        },
-        {
-          "username": "forma",
-          "password": "$2b$10$SDQ2uAULwoI1kMSJ5bzCyeHseqlNeDM3y8raV.0rN4hI0MArHAFZO",
-          "role": "admin",
-          "name": "Forma"
-        }
-      ]
-    },
-    {
       "id": "demo-local",
-      "name": "Demo - Nuevos Clientes",
+      "clientId": "internal-demo",
+      "name": "Demo - WhatsApp Automation",
       "enabled": true,
+      "status": "active",
+      "environment": "demo",
+      "readOnly": false,
       "whatsappSession": "demo-session",
       "ports": {
         "api": 5010,
@@ -90,27 +16,28 @@
       "paths": {
         "data": "data/demo-local",
         "logs": "logs/demo-local",
-        "catalog": "catalogs/catalogo-demo.js"
+        "catalog": "catalogs/catalogo-demo.js",
+        "auth": ".wwebjs_auth"
       },
       "info": {
-        "nombre": "Demo - Nuevos Clientes",
-        "telefono": "11 7145-8944",
-        "horario": "Disponible para consultas comerciales",
-        "direccion": "Demo del sistema de atención por WhatsApp"
+        "nombre": "Demo - WhatsApp Automation",
+        "telefono": "Demo",
+        "horario": "Demo environment",
+        "direccion": "Demo environment"
       },
-      "adminNumbers": ["5491158647529"],
+      "adminNumbers": [],
       "dashboardUsers": [
         {
           "username": "admin",
           "password": "$2b$10$DD7OGqlJlDinBTTofXkH.eC6BRra9Sk8JB6cowtOCvvJYjh3gtOeW",
           "role": "admin",
-          "name": "Administrador"
+          "name": "Admin"
         }
       ]
     }
   ],
   "dashboard": {
-    "port": 3000,
+    "port": 5011,
     "enabled": true
   }
 }

@@ -13,8 +13,8 @@ socket.on('connect', () => {
   console.log('   Socket ID:', socket.id);
 });
 
-// Escuchar eventos de agentes (santa-ana y local-2)
-const agentes = ['santa-ana', 'local-2'];
+// Escuchar eventos de la demo
+const agentes = ['demo-local'];
 
 agentes.forEach(agente => {
   socket.on(`agent_${agente}_initial`, (data) => {

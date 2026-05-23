@@ -1,6 +1,6 @@
 @echo off
 echo.
-echo 🎈 ===== DOLCE PARTY - INICIANDO SERVICIOS =====
+echo ===== WHATSAPP DEMO - INICIANDO SERVICIOS =====
 echo.
 echo 🤖 Iniciando Bot de WhatsApp...
 start "WhatsApp Bot" cmd /k "node bot.js"

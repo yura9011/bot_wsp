@@ -41,7 +41,7 @@ function slugify(text) {
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log('\n🎈 ===== AGREGAR NUEVO CLIENTE =====\n');
+  console.log('\n===== AGREGAR NUEVO CLIENTE =====\n');
 
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 
@@ -57,12 +57,12 @@ async function main() {
     // Pedir datos
     console.log('Completá los datos del nuevo cliente:\n');
     
-    const nombre = await pregunta(rl, '📛 Nombre del local (ej: Dolce Party - Centro): ');
+    const nombre = await pregunta(rl, 'Nombre del local o demo: ');
     const direccion = await pregunta(rl, '📍 Dirección: ');
     const telefono = await pregunta(rl, '📞 Teléfono: ');
     const horario = await pregunta(rl, `⏰ Horario [Lunes a Sábado: 9:00 a 20:00hs | Domingo: Cerrado]: `) || 'Lunes a Sábado: 9:00 a 20:00hs | Domingo: Cerrado';
     const dashUser = await pregunta(rl, `👤 Usuario del dashboard [admin]: `) || 'admin';
-    const dashPass = await pregunta(rl, `🔑 Contraseña del dashboard [admin123]: `) || 'admin123';
+    const dashPass = await pregunta(rl, `Contraseña del dashboard [change-me]: `) || 'change-me';
 
     rl.close();
 
@@ -93,7 +93,7 @@ async function main() {
       paths: {
         data: `data/${id}`,
         logs: `logs/${id}`,
-        catalog: 'catalogs/catalogo-santa-ana.js'
+        catalog: 'catalogs/catalogo-demo.js'
       },
       info: {
         nombre,
@@ -108,12 +108,6 @@ async function main() {
           password: passwordHash,
           role: 'admin',
           name: 'Administrador'
-        },
-        {
-          username: 'forma',
-          password: '$2b$10$SDQ2uAULwoI1kMSJ5bzCyeHseqlNeDM3y8raV.0rN4hI0MArHAFZO',
-          role: 'admin',
-          name: 'Forma'
         }
       ]
     };
@@ -147,10 +141,9 @@ async function main() {
     console.log('\n⚠️  El agente está DESHABILITADO por defecto.');
     console.log('Para activarlo cuando tengas el número de WhatsApp:');
     console.log(`  1. Editar config/agents.json → "${id}" → "enabled": true`);
-    console.log(`  2. git push → git pull en VPS → pm2 restart bot-dolce-prd`);
-    console.log(`  3. Escanear QR: pm2 logs bot-dolce-prd`);
-    console.log(`  4. Abrir dashboard: http://VPS_IP:${nextDashPort}`);
-    console.log(`  5. Abrir firewall: sudo ufw allow ${nextDashPort}/tcp\n`);
+    console.log('  2. Deployar el cambio en el entorno correspondiente');
+    console.log('  3. Iniciar el proceso PM2 del agente');
+    console.log(`  4. Abrir dashboard en el puerto ${nextDashPort}\n`);
 
   } catch (error) {
     console.error('❌ Error:', error.message);

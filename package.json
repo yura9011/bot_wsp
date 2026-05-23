@@ -1,17 +1,17 @@
 {
-  "name": "whatsapp-bot-cotillon",
+  "name": "whatsapp-automation-demo",
   "version": "1.0.0",
-  "description": "Bot de WhatsApp para cotillón - MVP",
-  "main": "bot.js",
+  "description": "Demo WhatsApp automation runtime with human dashboard",
+  "main": "orchestrator.js",
   "scripts": {
-    "start": "node bot.js",
-    "dashboard": "node dashboard.js",
-    "dev": "node bot.js & node dashboard.js",
+    "start": "node orchestrator.js start demo-local",
+    "demo:list": "node orchestrator.js list",
+    "demo:start": "node orchestrator.js start demo-local",
+    "dashboard:human": "node dashboard-humano-v2/server.js",
     "orchestrator:start": "node orchestrator.js start",
     "orchestrator:start:agent": "node orchestrator.js start",
     "orchestrator:stop": "node orchestrator.js stop",
     "orchestrator:list": "node orchestrator.js list",
-    "dashboard:central": "node dashboard-central.js",
     "add-client": "node scripts/add-client.js"
   },
   "dependencies": {

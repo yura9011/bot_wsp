@@ -2,7 +2,7 @@ const socket = io();
 
 socket.on('connect', () => {
   console.log('WebSocket conectado');
-  socket.emit('join_dashboard', { agentId: 'santa-ana' });
+  socket.emit('join_dashboard', { agentId: window.AGENT_ID || 'demo-local' });
 });
 
 socket.on('chats_updated', (chats) => {
