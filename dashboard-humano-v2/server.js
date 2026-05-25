@@ -12,6 +12,12 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const { authenticateToken, JWT_SECRET } = require('./middleware/auth');
 const { findAgentConfig } = require('../lib/agent-config');
 const { resolveRuntimePath } = require('../lib/runtime-paths');
+const { createConversationState } = require('../lib/conversation-state');
+const {
+  AdminNumberRegistryError,
+  createAdminNumberRegistry
+} = require('../lib/admin-number-registry');
+const { createBotApiClient } = require('./lib/bot-api-client');
 
 console.log('🚀 Iniciando Dashboard Humano v2 - VERSIÓN CORREGIDA');
 
@@ -31,10 +37,15 @@ const STARTUP_AGENT = resolveDashboardAgentConfig();
 const DATA_PATH = process.env.DATA_PATH
   ? resolveRuntimePath(process.env.DATA_PATH)
   : resolveRuntimePath(STARTUP_AGENT?.paths?.data || path.join('data', AGENT_ID));
-const HISTORIAL_PATH = path.join(DATA_PATH, 'historial.json');
-const PAUSAS_PATH = path.join(DATA_PATH, 'pausas.json');
-const ADMIN_NUMBERS_PATH = path.join(DATA_PATH, 'admin-numbers.json');
-const PHONE_MAP_PATH = resolveRuntimePath(process.env.PHONE_MAP_PATH || path.join('config', 'phone-map.json'));
+const conversationState = createConversationState(DATA_PATH);
+const adminNumberRegistry = createAdminNumberRegistry({
+  agentConfig: STARTUP_AGENT || {},
+  dataPath: DATA_PATH
+});
+const botApiClient = createBotApiClient({
+  agentId: AGENT_ID,
+  getAgentConfig: leerConfig
+});
 
 // Middleware
 app.use(cors());
@@ -67,146 +78,16 @@ function resolveDashboardAgentConfig() {
   return agent || null;
 }
 
-function getBotApiPort() {
-  const agent = leerConfig();
-  if (agent && agent.ports && agent.ports.api) {
-    return agent.ports.api;
-  }
-  return 3011;
-}
-
-async function callBotApi(pathname, options = {}) {
-  const botPort = getBotApiPort();
-  const response = await fetch(`http://127.0.0.1:${botPort}${pathname}`, options);
-
-  if (!response.ok) {
-    const err = await response.text();
-    throw new Error(`Bot API error: ${err}`);
-  }
-
-  return response;
-}
-
 function leerHistorial() {
-  try {
-    if (fs.existsSync(HISTORIAL_PATH)) {
-      return JSON.parse(fs.readFileSync(HISTORIAL_PATH, 'utf8'));
-    }
-    return {};
-  } catch (error) {
-    console.error('Error leyendo historial:', error);
-    return {};
-  }
+  return conversationState.loadHistory();
 }
 
 function leerPausas() {
-  try {
-    if (fs.existsSync(PAUSAS_PATH)) {
-      return JSON.parse(fs.readFileSync(PAUSAS_PATH, 'utf8'));
-    }
-    return {};
-  } catch (error) {
-    console.error('Error leyendo pausas:', error);
-    return {};
-  }
+  return conversationState.loadPauses();
 }
 
 function obtenerChats() {
-  const historial = leerHistorial();
-  const pausas = leerPausas();
-  const chats = [];
-
-  for (const [userId, mensajes] of Object.entries(historial)) {
-    if (!mensajes || mensajes.length === 0) continue;
-
-    const ultimoMensaje = mensajes[mensajes.length - 1];
-    const pausa = pausas[userId] || {};
-    const pausado = pausa.pausado || false;
-    
-    let estado = 'bot'; // Por defecto, bot manejando
-    if (pausado) {
-      estado = pausa.razon === 'atendido_desde_dashboard' ? 'active_human' : 'waiting_human';
-    }
-
-    chats.push({
-      userId,
-      nombre: userId.split('@')[0],
-      ultimoMensaje: (ultimoMensaje.text || ultimoMensaje.texto || ultimoMensaje.parts?.[0]?.text || '').substring(0, 50),
-      timestamp: ultimoMensaje.timestamp || Date.now(),
-      estado,
-      mensajes: mensajes.length,
-      noLeidos: pausado ? 1 : 0
-    });
-  }
-
-  // Ordenar por más reciente
-  chats.sort((a, b) => b.timestamp - a.timestamp);
-
-  return chats;
-}
-
-// ============================================
-// FUNCIONES ADMIN NUMBERS
-// ============================================
-
-function leerAdminNumbers() {
-  try {
-    if (fs.existsSync(ADMIN_NUMBERS_PATH)) {
-      return JSON.parse(fs.readFileSync(ADMIN_NUMBERS_PATH, 'utf8'));
-    }
-  } catch (error) {
-    console.error('Error leyendo admin-numbers:', error);
-  }
-
-  const envAdmins = getAdminNumbersFromEnv();
-  if (envAdmins.length > 0) {
-    return { admins: envAdmins };
-  }
-
-  const configAdmins = getAdminNumbersFromAgentConfig();
-  if (configAdmins.length > 0) {
-    return { admins: configAdmins };
-  }
-
-  return { admins: [] };
-}
-
-function getAdminNumbersFromEnv() {
-  return (process.env.ADMIN_NUMBERS || '')
-    .split(',')
-    .map(id => id.trim())
-    .filter(Boolean)
-    .map(id => buildAdminNumberEntry(id, 'Migrado desde .env'));
-}
-
-function getAdminNumbersFromAgentConfig() {
-  const agent = leerConfig();
-  if (!agent?.adminNumbers || agent.adminNumbers.length === 0) return [];
-
-  return agent.adminNumbers
-    .map(id => String(id).trim())
-    .filter(Boolean)
-    .map(id => buildAdminNumberEntry(id, 'Default agents.json'));
-}
-
-function buildAdminNumberEntry(id, nombre) {
-  return {
-    id,
-    nombre,
-    rol: 'admin',
-    agregadoPor: 'runtime-config',
-    fechaAgregado: new Date().toISOString()
-  };
-}
-
-function guardarAdminNumbers(data) {
-  try {
-    fs.writeFileSync(ADMIN_NUMBERS_PATH, JSON.stringify(data, null, 2), 'utf8');
-    return true;
-  } catch (error) {
-    console.error('Error guardando admin-numbers:', error);
-    return false;
-  }
+  return conversationState.listChats();
 }
 
 // ============================================
@@ -310,12 +191,7 @@ app.post('/api/chats/:userId/message', authenticateToken, async (req, res) => {
   }
 
   try {
-    // Enviar via bot API (que tiene el cliente WhatsApp)
-    await callBotApi(`/message/sendMessage/${AGENT_ID}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chatId: userId, message })
-    });
+    await botApiClient.sendHumanMessage(userId, message);
 
     io.emit('message_sent', { userId, message, timestamp: Date.now() });
     res.json({ success: true });
@@ -329,11 +205,7 @@ app.post('/api/chats/:userId/take', authenticateToken, async (req, res) => {
   const { userId } = req.params;
 
   try {
-    await callBotApi(`/pause/${encodeURIComponent(userId)}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ reason: 'atendido_desde_dashboard' })
-    });
+    await botApiClient.takeConversation(userId);
 
     io.emit('handoff_taken', { userId });
     res.json({ success: true });
@@ -347,9 +219,7 @@ app.post('/api/chats/:userId/resume', authenticateToken, async (req, res) => {
   const { userId } = req.params;
 
   try {
-    await callBotApi(`/resume/${encodeURIComponent(userId)}`, {
-      method: 'POST'
-    });
+    await botApiClient.resumeConversation(userId);
 
     io.emit('bot_resumed', { userId });
     res.json({ success: true });
@@ -363,16 +233,7 @@ app.post('/api/chats/:userId/finish', authenticateToken, async (req, res) => {
   const { userId } = req.params;
 
   try {
-    // Enviar "MUCHAS GRACIAS" via bot API
-    await callBotApi(`/message/sendMessage/${AGENT_ID}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chatId: userId, message: 'MUCHAS GRACIAS' })
-    });
-
-    await callBotApi(`/resume/${encodeURIComponent(userId)}`, {
-      method: 'POST'
-    });
+    await botApiClient.finishConversation(userId);
 
     io.emit('bot_resumed', { userId });
     res.json({ success: true });
@@ -393,40 +254,27 @@ function requireAdminRole(req, res, next) {
   next();
 }
 
+function handleAdminNumberError(error, res) {
+  if (error instanceof AdminNumberRegistryError) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+
+  console.error('Error guardando admin-numbers:', error);
+  return res.status(500).json({ error: 'Error guardando los datos' });
+}
+
 app.get('/api/admin-numbers', authenticateToken, (req, res) => {
-  const data = leerAdminNumbers();
-  res.json(data.admins);
+  res.json(adminNumberRegistry.list());
 });
 
 app.post('/api/admin-numbers', authenticateToken, requireAdminRole, (req, res) => {
   const { id, nombre, rol } = req.body;
 
-  if (!id || !/^\d+$/.test(id)) {
-    return res.status(400).json({ error: 'Número inválido. Solo dígitos.' });
-  }
-
-  if (rol && !['admin', 'ignorado'].includes(rol)) {
-    return res.status(400).json({ error: 'Rol inválido. Use admin o ignorado.' });
-  }
-
-  const data = leerAdminNumbers();
-
-  if (data.admins.some(a => a.id === id)) {
-    return res.status(409).json({ error: 'El número ya existe' });
-  }
-
-  data.admins.push({
-    id,
-    nombre: nombre || 'Sin nombre',
-    rol: rol || 'ignorado',
-    agregadoPor: req.user.username,
-    fechaAgregado: new Date().toISOString()
-  });
-
-  if (guardarAdminNumbers(data)) {
+  try {
+    adminNumberRegistry.addEntry({ id, nombre, rol, agregadoPor: req.user.username });
     res.json({ success: true, message: 'Número agregado correctamente' });
-  } else {
-    res.status(500).json({ error: 'Error guardando los datos' });
+  } catch (error) {
+    handleAdminNumberError(error, res);
   }
 });
 
@@ -434,42 +282,22 @@ app.put('/api/admin-numbers/:id', authenticateToken, requireAdminRole, (req, res
   const { id } = req.params;
   const { nombre, rol } = req.body;
 
-  if (rol && !['admin', 'ignorado'].includes(rol)) {
-    return res.status(400).json({ error: 'Rol inválido. Use admin o ignorado.' });
-  }
-
-  const data = leerAdminNumbers();
-  const index = data.admins.findIndex(a => a.id === id);
-
-  if (index === -1) {
-    return res.status(404).json({ error: 'Número no encontrado' });
-  }
-
-  if (nombre) data.admins[index].nombre = nombre;
-  if (rol) data.admins[index].rol = rol;
-
-  if (guardarAdminNumbers(data)) {
+  try {
+    adminNumberRegistry.updateEntry(id, { nombre, rol });
     res.json({ success: true, message: 'Número actualizado correctamente' });
-  } else {
-    res.status(500).json({ error: 'Error guardando los datos' });
+  } catch (error) {
+    handleAdminNumberError(error, res);
   }
 });
 
 app.delete('/api/admin-numbers/:id', authenticateToken, requireAdminRole, (req, res) => {
   const { id } = req.params;
-  const data = leerAdminNumbers();
-  const index = data.admins.findIndex(a => a.id === id);
 
-  if (index === -1) {
-    return res.status(404).json({ error: 'Número no encontrado' });
-  }
-
-  data.admins.splice(index, 1);
-
-  if (guardarAdminNumbers(data)) {
+  try {
+    adminNumberRegistry.deleteEntry(id);
     res.json({ success: true, message: 'Número eliminado correctamente' });
-  } else {
-    res.status(500).json({ error: 'Error guardando los datos' });
+  } catch (error) {
+    handleAdminNumberError(error, res);
   }
 });
 
@@ -520,8 +348,8 @@ app.get('/api/env', (req, res) => {
 
 app.get('/api/phone-map', authenticateToken, (req, res) => {
   try {
-    if (fs.existsSync(PHONE_MAP_PATH)) {
-      res.json(JSON.parse(fs.readFileSync(PHONE_MAP_PATH, 'utf8')));
+    if (fs.existsSync(adminNumberRegistry.phoneMapPath)) {
+      res.json(JSON.parse(fs.readFileSync(adminNumberRegistry.phoneMapPath, 'utf8')));
     } else {
       res.json({});
     }
