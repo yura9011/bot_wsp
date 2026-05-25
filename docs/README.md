@@ -9,3 +9,4 @@ Current public entry points:
 - `../README.md`
 - `../HANDOFF.md`
 - `../AGENTS.md`
+- `repo-inventory.md`
