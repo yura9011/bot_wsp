@@ -20,12 +20,19 @@ It is a working map for agents; it does not change runtime behavior.
 - `multi-tenant/scripts/validate-config.js` and `multi-tenant/scripts/port-manager.js` are shared config tooling, not runtime services.
 - `scripts/*.bat` are Windows convenience launchers. They should be checked before use because some names still reflect older workflows.
 
-## Legacy Candidates
+## Archived Legacy
 
-- `routes/human-panel.js` is not mounted by the active Express apps. It appears to predate `dashboard-humano-v2/server.js` and uses older handoff assumptions.
-- `scripts/start-dashboard-central.bat`, `testing/start-all.js`, and `testing/test-websocket.js` reference `dashboard-central.js`, but no public `dashboard-central.js` exists in the repo.
-- `testing/bot-debug.js`, `testing/debug-bot.js`, and `testing/test-catalogo.js` are ad hoc debug scripts. Review paths/imports before relying on them.
+- `legacy/routes/human-panel.js` is not mounted by the active Express apps. It appears to predate `dashboard-humano-v2/server.js` and uses older handoff assumptions.
+- `legacy/scripts/start-dashboard-central.bat`, `legacy/testing/start-all.js`, and `legacy/testing/test-websocket.js` reference `dashboard-central.js`, but no public `dashboard-central.js` exists in the repo.
+- `legacy/testing/bot-debug.js`, `legacy/testing/debug-bot.js`, and `legacy/testing/test-catalogo.js` are ad hoc debug scripts. Review paths/imports before relying on them.
 - Comments in `lib/agent-manager.js` still mention `dashboard-central`; the active caller is the human dashboard through Bot API endpoints.
+
+## Local Workspace Archive
+
+- Runtime state was moved out of the root to `.private/runtime-archive/2026-05-25/`.
+- A compressed backup and manifest were written to `.private/backups/runtime-2026-05-25/`.
+- Local reference repos, Convex scratch files, and agent-specific notes were moved to `.private/workbench/`.
+- Regenerable dependency folders and caches were removed from the workspace root.
 
 ## Internal Maestro Direction
 
@@ -35,6 +42,6 @@ It is a working map for agents; it does not change runtime behavior.
 
 ## Safety Rules For Cleanup
 
-- Do not edit or normalize `data/`, `logs/`, `.wwebjs_auth/`, `.wwebjs_cache/`, `.env*`, `.private/`, or environment-specific overrides.
+- Do not edit or normalize archived runtime, `.wwebjs_cache/`, `.env*`, `.private/`, or environment-specific overrides.
 - Before deleting or moving a legacy candidate, prove it is unused with `rg` and a runtime check.
 - Keep bot, dashboard, and maestro work in separate `codex/*` branches.

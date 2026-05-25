@@ -57,6 +57,7 @@ multi-tenant/clients/internal-demo/
                                  Config demo versionada
 config/agents.json               Config local demo-only
 catalogs/                        Catalogos de ejemplo
+legacy/                          Superficies historicas fuera del runtime activo
 ```
 
 ## Datos Y Secretos
