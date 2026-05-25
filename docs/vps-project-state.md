@@ -2,7 +2,7 @@
 
 Snapshot date: 2026-05-25
 
-This document records the current VPS/project state after the architecture refactor was pushed and a first deployment inspection was performed.
+This document records the current VPS/project state after the architecture refactor was pushed, deployed for demo testing, and manually verified.
 
 ## Access
 
@@ -64,9 +64,8 @@ PM2 state:
 
 - `PM2_HOME=/home/forma/.pm2` is the PM2 instance available to user `forma`.
 - PM2 for `forma` was empty before the deployment attempt.
-- `bot-demo-local` and `dashboard-humano-demo-local` were briefly started from `/home/forma/bot_wsp` for verification.
-- They were deleted afterward because the demo does not need to keep running right now.
-- Final expected state for user `forma`: no PM2 apps running and ports `5010`/`5011` free.
+- `bot-demo-local` and `dashboard-humano-demo-local` are running from `/home/forma/bot_wsp`.
+- Final expected state for user `forma`: both PM2 apps online and ports `5010`/`5011` serving the demo.
 
 Root PM2:
 
@@ -99,7 +98,13 @@ Deployment smoke performed:
 - Bot status was `qr`, waiting for WhatsApp QR scan.
 - Dashboard initially failed because dashboard dependencies were not installed.
 - `npm install` was then run inside `dashboard-humano-v2/`, dashboard was restarted, and `http://127.0.0.1:5011/api/env` returned `{ "isTesting": false, "agentId": "demo-local" }`.
-- Both PM2 apps were then deleted to leave demo stopped.
+- A later live smoke test confirmed the dashboard also responded externally on port `5011`.
+- The QR flow was completed by the user, WhatsApp connected, and the bot responded correctly.
+
+Current live PM2 apps under `forma`:
+
+- `bot-demo-local`
+- `dashboard-humano-demo-local`
 
 ## Current Deployment Position
 
@@ -111,31 +116,22 @@ branch: codex/workspace-physical-cleanup
 remote: https://github.com/yura9011/bot_wsp.git
 ```
 
-This is not yet a stable production/demo deployment directory because:
+This is now the active tested demo deployment directory, with these remaining caveats:
 
 - It was freshly cloned during this session.
-- Runtime/session data are new and separate from existing `bot_testing`/`bot_dolce`.
-- WhatsApp auth is not connected; bot reached QR state.
-- PM2 apps are not saved with `pm2 save`.
+- Runtime/session data are new and separate from existing `bot_testing`/`bot_dolce` unless explicitly migrated later.
+- WhatsApp auth was connected during the live test.
+- PM2 apps are running, but `pm2 save` has not been confirmed.
 - There is no confirmed reverse proxy or public URL mapping for ports `5010`/`5011`.
 - Root PM2 and any root-managed deployment remain uninspected.
 
 ## Recommended Next Steps
 
-1. Decide which directory is the canonical deployment target:
-   - Recommended: promote `/home/forma/bot_wsp` if the goal is a clean deploy of the refactor.
-   - Alternative: migrate an existing directory only after backing up runtime data.
-2. Decide whether demo runtime should reuse existing WhatsApp/session/data:
-   - If yes, explicitly copy or point `.wwebjs_auth`, `data`, and logs from the chosen existing source after backup.
-   - If no, scan the new QR from `/home/forma/bot_wsp`.
-3. Decide process owner:
-   - Recommended: run bot and dashboard under `forma`, not root.
-   - If root PM2 is still active for any old deployment, inspect it from provider console/root before switching traffic.
-4. Normalize PM2 only after the canonical directory is chosen:
-   - `PM2_HOME=/home/forma/.pm2 pm2 start multi-tenant/clients/internal-demo/ecosystem.config.js`
-   - verify ports/endpoints
-   - `PM2_HOME=/home/forma/.pm2 pm2 save`
-5. If `/home/forma/bot_wsp` should remain clean, revert or recommit VPS-only lockfile changes caused by `npm install` before using it as a Git working copy.
+1. Treat `/home/forma/bot_wsp` as the current canonical demo deployment unless a later migration plan replaces it.
+2. Keep bot and dashboard under user `forma`.
+3. Decide whether to persist the current PM2 process list with `pm2 save`.
+4. Decide whether ports `5010`/`5011` should remain directly exposed or be put behind a reverse proxy.
+5. If `/home/forma/bot_wsp` should remain clean as a Git working copy, handle the VPS-only lockfile changes caused by `npm install`.
 
 ## Guardrails
 
