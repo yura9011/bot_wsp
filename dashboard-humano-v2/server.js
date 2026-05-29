@@ -18,6 +18,7 @@ const {
   createAdminNumberRegistry
 } = require('../lib/admin-number-registry');
 const { createBotApiClient } = require('./lib/bot-api-client');
+const { createStatisticsManager } = require('../lib/statistics');
 
 console.log('🚀 Iniciando Dashboard Humano v2 - VERSIÓN CORREGIDA');
 
@@ -46,6 +47,7 @@ const botApiClient = createBotApiClient({
   agentId: AGENT_ID,
   getAgentConfig: leerConfig
 });
+const statsManager = createStatisticsManager(path.join(DATA_PATH, 'estadisticas.json'));
 
 // Middleware
 app.use(cors());
@@ -173,6 +175,25 @@ app.get('/api/auth/verify', authenticateToken, (req, res) => {
 app.get('/api/chats', authenticateToken, (req, res) => {
   const chats = obtenerChats();
   res.json(chats);
+});
+
+app.get('/api/stats/daily', authenticateToken, async (req, res) => {
+  try {
+    const { from, to } = req.query;
+    if (from && to) {
+      const stats = await statsManager.getEstadisticasRango(from, to);
+      return res.json(stats);
+    }
+    const stats = await statsManager.getEstadisticasHoy();
+    const chats = conversationState.listChats();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const conversacionesHoy = chats.filter(c => new Date(c.timestamp) >= today).length;
+    res.json({ ...stats, conversacionesHoy });
+  } catch (error) {
+    console.error('Error obteniendo stats:', error);
+    res.status(500).json({ error: 'Error obteniendo estadísticas' });
+  }
 });
 
 app.get('/api/chats/:userId/messages', authenticateToken, (req, res) => {

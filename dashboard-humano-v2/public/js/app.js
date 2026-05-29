@@ -23,6 +23,14 @@ async function init() {
   document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
   document.getElementById('sidebarBackdrop').addEventListener('click', closeSidebar);
 
+  const statsApply = document.getElementById('statsDateApply');
+  if (statsApply) {
+    statsApply.addEventListener('click', () => {
+      initDatePickers();
+      loadStats();
+    });
+  }
+
   loadChats();
   setInterval(loadChats, 5000);
   requestNotificationPermission();
@@ -70,6 +78,7 @@ function switchTab(tab) {
     document.getElementById('tabStats').classList.add('active');
     statsContainer.style.display = 'block';
     statsPanel.style.display = 'flex';
+    initDatePickers();
     loadStats();
   }
 }
