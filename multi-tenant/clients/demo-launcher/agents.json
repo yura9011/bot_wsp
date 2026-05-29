@@ -1,0 +1,49 @@
+{
+  "agents": [
+    {
+      "id": "demo-launcher",
+      "clientId": "demo-launcher",
+      "name": "Demo Launcher - 3 negocios",
+      "enabled": true,
+      "status": "active",
+      "environment": "demo",
+      "readOnly": false,
+      "features": {
+        "human_handoff": true,
+        "flowType": "demo-launcher"
+      },
+      "whatsappSession": "demo-session",
+      "ports": {
+        "api": 5050,
+        "dashboard": 5051
+      },
+      "paths": {
+        "data": "data/demo-launcher",
+        "logs": "logs/demo-launcher",
+        "auth": ".wwebjs_auth"
+      },
+      "info": {
+        "nombre": "Demo - Prueba 3 negocios",
+        "telefono": "+54 9 11 5555-0000",
+        "horario": "Demo 24/7",
+        "direccion": "Demo virtual"
+      },
+      "adminNumbers": [],
+      "dashboardUsers": [
+        {
+          "username": "admin",
+          "password": "$2b$10$DD7OGqlJlDinBTTofXkH.eC6BRra9Sk8JB6cowtOCvvJYjh3gtOeW",
+          "role": "admin",
+          "name": "Admin Launcher"
+        }
+      ],
+      "pm2": {
+        "bot": "bot-demo-launcher",
+        "dashboard": "dashboard-humano-demo-launcher"
+      },
+      "links": {
+        "dashboard": "/index.html"
+      }
+    }
+  ]
+}
