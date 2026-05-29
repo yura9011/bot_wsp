@@ -211,6 +211,10 @@ function getMensajeDemoFinalizado() {
   return `La demo finalizó. Para otra prueba podemos preparar un caso específico con el flujo, tono y reglas de tu negocio.`;
 }
 
+function getMensajeDerivacion() {
+  return `No tengo ese dato confirmado en este momento. Te derivo con alguien del equipo para evitar darte información incorrecta.`;
+}
+
 // ─── ESTADOS DEL FLUJO ───────────────────────────────────────────────────────
 
 const ESTADOS = {
@@ -245,4 +249,5 @@ module.exports = {
   getMensajeDemoInicial,
   getMensajeDemoRespuesta,
   getMensajeDemoFinalizado,
+  getMensajeDerivacion,
 };
