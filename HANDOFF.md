@@ -76,3 +76,18 @@ Pulir y probar la experiencia comercial del demo respondedor:
 - ajustar el prompt demo si responde demasiado amplio o demasiado tecnico;
 - validar que el dashboard muestre con claridad motivo, estado y nuevo handoff;
 - mantener el dashboard humano como proceso separado para observar conversaciones y pruebas internas.
+
+## Prueba Manual De Handoff En VPS
+
+Flujo validado en VPS el 2026-05-29 sobre `codex/workspace-physical-cleanup` commit `179bb20`:
+
+1. Usuario envia `hola`.
+2. Bot presenta la demo.
+3. Usuario envia `tengo un reclamo`.
+4. Bot detecta motivo `Reclamo`, responde que pasa con una persona y pausa la IA con `handoff_solicitado`.
+5. Dashboard muestra el chat como `Pausado`, con motivo visible y notificacion de handoff.
+6. Operador toma la conversacion desde el panel; el estado pasa a `Atencion humana`.
+7. Mensajes enviados desde el panel salen como mensajes humanos.
+8. Si el operador usa `Devolver al bot` o finaliza la conversacion, se ejecuta `reanudarUsuario` y la IA vuelve a responder.
+
+Interpretacion importante: si despues de devolver control al bot el cliente envia otro mensaje y recibe respuesta automatica, eso es comportamiento esperado. Para probar que la IA queda pausada, no usar `Devolver al bot`; enviar otro mensaje del cliente mientras el chat sigue en `Atencion humana` y verificar que aparece en historial sin respuesta automatica.

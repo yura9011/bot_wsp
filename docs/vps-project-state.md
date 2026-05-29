@@ -138,3 +138,46 @@ This is now the active tested demo deployment directory, with these remaining ca
 - Do not overwrite `.env`, `.wwebjs_auth`, `.wwebjs_cache`, `data`, `logs`, or backup directories.
 - Do not run `pm2 save`, root PM2 commands, deploy hooks, or reverse proxy changes without an explicit go-ahead.
 - Treat `/home/forma/bot_dolce` as dirty runtime state, not a clean source checkout.
+
+## Handoff Polish Deployment - 2026-05-29
+
+Deployed commit:
+
+```text
+179bb20 Polish human handoff demo flow
+```
+
+Deployment actions performed under user `forma` in `/home/forma/bot_wsp`:
+
+```bash
+git pull --ff-only origin codex/workspace-physical-cleanup
+node --check orchestrator.js
+node --check dashboard-humano-v2/server.js
+node --check multi-tenant/clients/internal-demo/ecosystem.config.js
+node --test lib/handoff-intent.test.js lib/runtime-config.test.js lib/conversation-state.test.js lib/admin-number-registry.test.js lib/message-intake.test.js lib/agent-api-routes.test.js dashboard-humano-v2/lib/bot-api-client.test.js lib/agent-manager-demo-flow.test.js
+PM2_HOME=/home/forma/.pm2 pm2 restart bot-demo-local dashboard-humano-demo-local --update-env
+```
+
+Result:
+
+- Fast-forward pull from `0075c95` to `179bb20`.
+- Syntax checks passed.
+- 49 Node tests passed on the VPS.
+- `bot-demo-local` and `dashboard-humano-demo-local` restarted and remained online.
+- Bot API smoke passed on `http://127.0.0.1:5010/status`; WhatsApp status was `connected`.
+- Dashboard smoke passed on `http://127.0.0.1:5011/api/test`.
+
+Manual handoff test observed:
+
+- Visitor sent a greeting; bot presented the demo.
+- Visitor sent a complaint-style phrase.
+- Bot detected `Reclamo`, paused AI with `handoff_solicitado`, and notified the dashboard.
+- Dashboard operator took the conversation; PM2 logs showed the state changing to `atendido_desde_dashboard`.
+- Human messages sent from the dashboard were delivered through the bot API.
+- The operator later returned control to the bot; PM2 logs showed `reanudarUsuario`.
+- A later visitor message received an automatic response because control had already been returned to the bot. This was expected behavior, not evidence of a duplicate bot process.
+
+Operational note:
+
+- To validate pause behavior, keep the chat in `Atencion humana` and send a new visitor message. It should be saved to the dashboard history and should not receive an automatic bot reply.
+- If `Devolver al bot` or finalization is used, the next visitor message may be handled by AI again.
