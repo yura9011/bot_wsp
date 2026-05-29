@@ -1,8 +1,10 @@
 # WhatsApp Automation Demo
 
-Demo comercial de una plataforma de atencion por WhatsApp con bot, handoff humano y dashboard operativo.
+Demo comercial de una plataforma de atencion por WhatsApp con bot respondedor, handoff humano configurable y dashboard operativo.
 
 El repo esta enfocado en un entorno demo (`demo-local`) para iterar producto sin publicar datos de clientes, rutas de servidores ni runtime data real.
+
+El demo activo ya no simula una tienda ni usa catalogo. `demo-local` muestra una experiencia acotada de agente respondedor: saluda, acepta una sola consulta sobre capacidades de la plataforma, responde con LLM bajo un prompt limitado y cierra la demo para evitar conversaciones extendidas. Deriva automaticamente a humano cuando detecta intención de atención humana, precio, reclamo o falta de entendimiento.
 
 ## Requisitos
 

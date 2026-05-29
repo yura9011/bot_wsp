@@ -9,7 +9,19 @@ socket.on('chats_updated', (chats) => {
   if (currentTab === 'chats') renderChats(chats);
 });
 
-socket.on('new_message', ({ userId }) => {
+socket.on('handoff_requested', (payload) => {
+  const { userId, handoffReasonLabel } = payload;
+  if (userId === currentUserId) {
+    loadMessages(userId);
+  }
+  playNotification();
+  showHandoffToast(payload);
+  showDesktopNotification('Nuevo handoff', `${userId.split('@')[0]} - ${handoffReasonLabel || 'Atención humana'}`);
+  loadChats();
+});
+
+socket.on('new_message', ({ userId, handoffReason }) => {
+  if (handoffReason) return;
   if (userId === currentUserId) {
     loadMessages(userId);
   }

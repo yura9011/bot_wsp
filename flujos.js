@@ -190,32 +190,25 @@ function getMensajeNoEntiendo() {
 }
 
 function getMensajeDemoInicial() {
-  return `¡Hola! 👋
+  return `Hola.
 
-Estás hablando con una *demo del sistema de atención por WhatsApp*.
+Esta es una demo del agente de respuesta por WhatsApp.
 
-No es una tienda real y no toma pedidos. La idea es mostrar, en una interacción corta, cómo el bot puede recibir una consulta, responder con contexto y derivar a una persona cuando hace falta.
+Podés enviar una consulta sobre cómo automatiza respuestas, qué puede resolver, cómo trabaja con un panel humano o qué límites tiene.
 
-Escribí una consulta de ejemplo, por ejemplo:
-• Quiero saber si tienen stock de un producto
-• Necesito hablar con una persona
-• Quiero consultar horarios o entregas`;
+La demo responde una sola consulta para evitar conversaciones extendidas.`;
 }
 
 function getMensajeDemoRespuesta() {
-  return `Gracias. Esta sería una respuesta automática de muestra:
+  return `El agente puede responder consultas frecuentes, mantener el tono definido para la marca y dejar trazabilidad para que el equipo vea la conversación desde el panel.
 
-Puedo entender la consulta, pedir datos si faltan y dejar el caso listo para que una persona continúe desde el panel humano.
+También puede configurarse con reglas, límites y criterios de derivación según el caso real.
 
-Para esta demo dejamos la interacción acá, así evitamos simular una operación real.
-
-Si querés ver otro caso, podemos reiniciar el recorrido desde el panel o preparar una demo específica para tu negocio.`;
+La demo finalizó. Para otra prueba podemos preparar un caso específico con el flujo, tono y reglas de tu negocio.`;
 }
 
 function getMensajeDemoFinalizado() {
-  return `La demo corta ya finalizó.
-
-Este número está configurado solo para mostrar el funcionamiento del sistema. Para otra prueba, podemos reiniciar el recorrido o preparar un flujo demo específico.`;
+  return `La demo finalizó. Para otra prueba podemos preparar un caso específico con el flujo, tono y reglas de tu negocio.`;
 }
 
 // ─── ESTADOS DEL FLUJO ───────────────────────────────────────────────────────

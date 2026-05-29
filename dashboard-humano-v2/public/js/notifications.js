@@ -30,3 +30,29 @@ function showDesktopNotification(title, body) {
     new Notification(title, { body, icon: '/favicon.ico' });
   }
 }
+
+function showHandoffToast({ userId, handoffReasonLabel }) {
+  let container = document.getElementById('toastContainer');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toastContainer';
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('button');
+  toast.type = 'button';
+  toast.className = 'handoff-toast';
+  toast.innerHTML = `
+    <strong>Nuevo handoff</strong>
+    <span>${userId.split('@')[0]}</span>
+    <small>${handoffReasonLabel || 'Requiere atención humana'}</small>
+  `;
+  toast.addEventListener('click', () => {
+    if (typeof selectChat === 'function') selectChat(userId);
+    toast.remove();
+  });
+
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 8000);
+}

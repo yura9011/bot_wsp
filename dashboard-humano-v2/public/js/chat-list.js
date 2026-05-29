@@ -1,26 +1,49 @@
+function getChatStatusText(estado) {
+  if (estado === 'waiting_human') return 'Pausado';
+  if (estado === 'active_human') return 'Atención humana';
+  return 'IA activa';
+}
+
+function getChatStatusEmoji(estado) {
+  if (estado === 'waiting_human') return '🔴';
+  if (estado === 'active_human') return '🟢';
+  return '⚪';
+}
+
+function sortChatsForOperator(chats) {
+  const priority = { waiting_human: 0, active_human: 1, bot: 2 };
+  return [...chats].sort((a, b) => {
+    const stateDiff = (priority[a.estado] ?? 3) - (priority[b.estado] ?? 3);
+    if (stateDiff !== 0) return stateDiff;
+    return (b.timestamp || 0) - (a.timestamp || 0);
+  });
+}
+
 function renderChats(chats) {
   const container = document.getElementById('chatListContainer');
   const chatCount = document.getElementById('chatCount');
   if (!container) return;
   if (chatCount) chatCount.textContent = chats.length;
   window.currentChatsByUserId = Object.fromEntries(chats.map(chat => [chat.userId, chat]));
-  
+
   if (chats.length === 0) {
     container.innerHTML = '<p class="no-chats">No hay chats activos</p>';
     if (window.updateConversationStatus) window.updateConversationStatus('bot');
     return;
   }
-  
-  container.innerHTML = chats.map(chat => {
-    const statusEmoji = chat.estado === 'waiting_human' ? '🔴' : 
-                       chat.estado === 'active_human' ? '🟢' : '⚪';
-    const statusText = chat.estado === 'waiting_human' ? 'Esperando humano' :
-                       chat.estado === 'active_human' ? 'Atendido por humano' : 'Bot activo';
-    const time = new Date(chat.timestamp).toLocaleTimeString('es-AR', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
+
+  const orderedChats = sortChatsForOperator(chats);
+  container.innerHTML = orderedChats.map(chat => {
+    const statusEmoji = getChatStatusEmoji(chat.estado);
+    const statusText = getChatStatusText(chat.estado);
+    const time = new Date(chat.timestamp).toLocaleTimeString('es-AR', {
+      hour: '2-digit',
+      minute: '2-digit'
     });
-    
+    const handoffReason = chat.handoffReasonLabel
+      ? `<div class="handoff-reason">${chat.handoffReasonLabel}</div>`
+      : '';
+
     return `
       <div class="chat-item ${chat.estado}${chat.userId === currentUserId ? ' active' : ''}" data-user-id="${chat.userId}">
         <div class="chat-status">${statusEmoji}</div>
@@ -28,6 +51,7 @@ function renderChats(chats) {
           <div class="chat-name">${chat.nombre}</div>
           <div class="chat-preview">${chat.ultimoMensaje}</div>
           <div class="chat-state-label">${statusText}</div>
+          ${handoffReason}
         </div>
         <div class="chat-meta">
           <div class="chat-time">${time}</div>
@@ -36,7 +60,7 @@ function renderChats(chats) {
       </div>
     `;
   }).join('');
-  
+
   document.querySelectorAll('.chat-item').forEach(item => {
     item.addEventListener('click', () => {
       const userId = item.dataset.userId;
@@ -71,6 +95,7 @@ document.getElementById('searchInput')?.addEventListener('input', (e) => {
   items.forEach(item => {
     const nombre = item.querySelector('.chat-name')?.textContent.toLowerCase() || '';
     const preview = item.querySelector('.chat-preview')?.textContent.toLowerCase() || '';
-    item.style.display = (nombre.includes(query) || preview.includes(query)) ? 'flex' : 'none';
+    const reason = item.querySelector('.handoff-reason')?.textContent.toLowerCase() || '';
+    item.style.display = (nombre.includes(query) || preview.includes(query) || reason.includes(query)) ? 'flex' : 'none';
   });
 });

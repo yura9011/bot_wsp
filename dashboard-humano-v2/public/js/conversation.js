@@ -22,24 +22,47 @@ function updateConversationStatus(estado = 'bot') {
   const takeBtn = document.getElementById('takeBtn');
   const resumeBtn = document.getElementById('resumeBtn');
   const finishBtn = document.getElementById('finishBtn');
+  const chat = window.currentChatsByUserId?.[currentUserId];
 
   if (status) {
     status.className = 'status-badge';
     if (estado === 'active_human') {
-      status.textContent = 'Atendido por humano';
+      status.textContent = 'Atención humana';
       status.classList.add('active');
     } else if (estado === 'waiting_human') {
-      status.textContent = 'Esperando humano';
+      status.textContent = 'Pausado';
       status.classList.add('waiting');
     } else {
-      status.textContent = 'Bot activo';
+      status.textContent = 'IA activa';
       status.classList.add('bot');
     }
   }
 
+  renderHandoffReason(chat);
+
   if (takeBtn) takeBtn.disabled = !currentUserId || estado === 'active_human';
   if (resumeBtn) resumeBtn.disabled = !currentUserId || estado === 'bot';
   if (finishBtn) finishBtn.disabled = !currentUserId;
+}
+
+function renderHandoffReason(chat) {
+  const actions = document.querySelector('.conversation-header-actions');
+  if (!actions) return;
+
+  let reason = document.getElementById('handoffReasonBadge');
+  if (!chat?.handoffReasonLabel) {
+    if (reason) reason.remove();
+    return;
+  }
+
+  if (!reason) {
+    reason = document.createElement('span');
+    reason.id = 'handoffReasonBadge';
+    reason.className = 'handoff-reason-badge';
+    actions.insertBefore(reason, actions.firstChild);
+  }
+
+  reason.textContent = 'Motivo: ' + chat.handoffReasonLabel;
 }
 
 window.updateConversationStatus = updateConversationStatus;

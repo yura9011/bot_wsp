@@ -306,8 +306,11 @@ app.delete('/api/admin-numbers/:id', authenticateToken, requireAdminRole, (req, 
 // ============================================
 
 app.post('/api/internal/new-message', (req, res) => {
-  const { userId } = req.body;
-  io.emit('new_message', { userId });
+  const { userId, event = 'new_message', handoffReason = null, handoffReasonLabel = null, handoffRequestedAt = null } = req.body;
+  io.emit(event, { userId, handoffReason, handoffReasonLabel, handoffRequestedAt });
+  if (event !== 'new_message') {
+    io.emit('new_message', { userId, handoffReason, handoffReasonLabel, handoffRequestedAt });
+  }
   res.json({ ok: true });
 });
 

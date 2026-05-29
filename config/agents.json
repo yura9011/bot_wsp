@@ -8,6 +8,9 @@
       "status": "active",
       "environment": "demo",
       "readOnly": false,
+      "features": {
+        "human_handoff": true
+      },
       "whatsappSession": "demo-session",
       "ports": {
         "api": 5010,
@@ -16,7 +19,6 @@
       "paths": {
         "data": "data/demo-local",
         "logs": "logs/demo-local",
-        "catalog": "catalogs/catalogo-demo.js",
         "auth": ".wwebjs_auth"
       },
       "info": {

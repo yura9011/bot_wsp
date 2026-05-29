@@ -37,6 +37,14 @@ Behavior kept stable:
 - Demo and order flows remain in `AgentManager`; only intake mechanics and API route mounting were extracted.
 - No PM2, deploy, dependency, runtime data, `.env`, WhatsApp session, or `.private/` changes were made.
 
+Later demo behavior update:
+
+- `demo-local` was changed from a store/catalog-style demo to a short capability-responder demo.
+- `demo-local` no longer defines `paths.catalog` in the versioned demo config or local fallback config.
+- The demo now greets, accepts one capability question, answers through LLM with a demo-scoped system prompt, and then closes.
+- The demo now uses the real handoff path for human requests, pricing, complaints, and misunderstanding signals; it pauses AI and surfaces the reason in the dashboard.
+- `lib/agent-manager-demo-flow.test.js` covers the demo flow, LLM fallback, real handoff behavior, paused-message history, and old demo-state reset.
+
 ## PR 1: Runtime Conversation State Module
 
 Status: completed.
@@ -254,7 +262,8 @@ git diff --check
 
 Result:
 
-- 34 Node tests passed.
+- 34 Node tests passed for the architecture refactor.
+- After the handoff polish update, the focused suite passed with 49 Node tests.
 - Syntax checks passed.
 - `git diff --check` passed.
 
