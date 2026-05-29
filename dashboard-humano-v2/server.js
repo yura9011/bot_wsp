@@ -19,6 +19,7 @@ const {
 } = require('../lib/admin-number-registry');
 const { createBotApiClient } = require('./lib/bot-api-client');
 const { createStatisticsManager } = require('../lib/statistics');
+const { seedDemoData } = require('./lib/demo-seed');
 
 console.log('🚀 Iniciando Dashboard Humano v2 - VERSIÓN CORREGIDA');
 
@@ -363,7 +364,34 @@ setInterval(() => {
 // ============================================
 
 app.get('/api/env', (req, res) => {
-  res.json({ isTesting: IS_TESTING, agentId: AGENT_ID });
+  const agent = leerConfig();
+  const environment = agent?.environment || 'production';
+  res.json({ isTesting: IS_TESTING, agentId: AGENT_ID, environment });
+});
+
+// ============================================
+// ENDPOINT DE RESET DEMO
+// ============================================
+
+app.post('/api/demo/reset', authenticateToken, async (req, res) => {
+  try {
+    const agent = leerConfig();
+    if (!agent || agent.environment !== 'demo') {
+      return res.status(403).json({ error: 'Reset solo disponible en entornos demo' });
+    }
+
+    conversationState.clearAllData();
+    await statsManager.resetEstadisticas();
+    const seeded = seedDemoData(DATA_PATH);
+
+    io.emit('chats_updated', []);
+
+    console.log(`🔄 Demo reset completado: ${seeded} conversaciones sembradas`);
+    res.json({ success: true, seeded });
+  } catch (error) {
+    console.error('Error en demo reset:', error);
+    res.status(500).json({ error: 'Error ejecutando reset' });
+  }
 });
 
 // ============================================

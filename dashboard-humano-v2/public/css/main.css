@@ -112,3 +112,36 @@ body {
     color: var(--gray-400);
     font-size: var(--text-sm);
 }
+
+/* --- DEMO BADGE --- */
+.demo-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--warning);
+    color: #fff;
+    font-size: 10px;
+    font-weight: var(--font-bold);
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-left: var(--spacing-2);
+}
+
+/* --- RESET DEMO BUTTON --- */
+.btn-reset-demo {
+    padding: var(--spacing-1) var(--spacing-3);
+    background: transparent;
+    color: var(--error);
+    border: 1px solid var(--error);
+    border-radius: var(--radius-md);
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    margin-right: var(--spacing-2);
+}
+
+.btn-reset-demo:hover {
+    background: var(--error);
+    color: #fff;
+}

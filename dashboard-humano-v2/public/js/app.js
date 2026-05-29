@@ -12,9 +12,18 @@ async function init() {
       document.querySelector('.dashboard').classList.add('is-testing');
       document.getElementById('testingBanner').style.display = 'block';
     }
+    if (env.environment === 'demo') {
+      document.getElementById('demoBadge').style.display = 'inline';
+      document.getElementById('resetDemoBtn').style.display = 'inline-block';
+    }
   } catch(e) {}
 
   document.getElementById('logoutBtn').addEventListener('click', logout);
+
+  const resetBtn = document.getElementById('resetDemoBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', handleResetDemo);
+  }
 
   document.getElementById('tabChats').addEventListener('click', () => switchTab('chats'));
   document.getElementById('tabConfig').addEventListener('click', () => switchTab('config'));
@@ -107,6 +116,26 @@ async function loadChats() {
     }
   } catch (error) {
     console.error('Error cargando chats:', error);
+  }
+}
+
+async function handleResetDemo() {
+  const confirmed = confirm('¿Borrar todas las conversaciones y métricas de demo?\n\nSe generarán conversaciones de ejemplo.');
+  if (!confirmed) return;
+
+  try {
+    const response = await fetch('/api/demo/reset', {
+      method: 'POST',
+      credentials: 'include'
+    });
+    const data = await response.json();
+    if (data.success) {
+      window.location.reload();
+    } else {
+      alert('Error: ' + (data.error || 'No se pudo completar el reset'));
+    }
+  } catch (error) {
+    alert('Error de conexión al resetear demo');
   }
 }
 
