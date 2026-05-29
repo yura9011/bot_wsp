@@ -12,7 +12,7 @@
         "human_handoff": true,
         "flowType": "rotiseria"
       },
-      "whatsappSession": "demo-rotiseria-session",
+      "whatsappSession": "demo-session",
       "ports": {
         "api": 5020,
         "dashboard": 5021
