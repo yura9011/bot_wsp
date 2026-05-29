@@ -1,0 +1,50 @@
+{
+  "agents": [
+    {
+      "id": "demo-veterinaria",
+      "clientId": "demo-veterinaria",
+      "name": "Demo Veterinaria",
+      "enabled": true,
+      "status": "active",
+      "environment": "demo",
+      "readOnly": false,
+      "features": {
+        "human_handoff": true,
+        "flowType": "veterinaria"
+      },
+      "whatsappSession": "demo-veterinaria-session",
+      "ports": {
+        "api": 5030,
+        "dashboard": 5031
+      },
+      "paths": {
+        "data": "data/demo-veterinaria",
+        "logs": "logs/demo-veterinaria",
+        "catalog": "catalogs/catalogo-veterinaria.js",
+        "auth": ".wwebjs_auth"
+      },
+      "info": {
+        "nombre": "PetCare Veterinaria",
+        "telefono": "+54 9 11 5555-9999",
+        "horario": "Lunes a Viernes 9 a 18 hs, Sábados 9 a 13 hs",
+        "direccion": "Calle Falsa 456, CABA"
+      },
+      "adminNumbers": [],
+      "dashboardUsers": [
+        {
+          "username": "admin",
+          "password": "$2b$10$DD7OGqlJlDinBTTofXkH.eC6BRra9Sk8JB6cowtOCvvJYjh3gtOeW",
+          "role": "admin",
+          "name": "Admin Veterinaria"
+        }
+      ],
+      "pm2": {
+        "bot": "bot-demo-veterinaria",
+        "dashboard": "dashboard-humano-demo-veterinaria"
+      },
+      "links": {
+        "dashboard": "/index.html"
+      }
+    }
+  ]
+}

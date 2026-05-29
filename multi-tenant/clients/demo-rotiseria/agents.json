@@ -1,0 +1,50 @@
+{
+  "agents": [
+    {
+      "id": "demo-rotiseria",
+      "clientId": "demo-rotiseria",
+      "name": "Demo Rotisería",
+      "enabled": true,
+      "status": "active",
+      "environment": "demo",
+      "readOnly": false,
+      "features": {
+        "human_handoff": true,
+        "flowType": "rotiseria"
+      },
+      "whatsappSession": "demo-rotiseria-session",
+      "ports": {
+        "api": 5020,
+        "dashboard": 5021
+      },
+      "paths": {
+        "data": "data/demo-rotiseria",
+        "logs": "logs/demo-rotiseria",
+        "catalog": "catalogs/catalogo-rotiseria.js",
+        "auth": ".wwebjs_auth"
+      },
+      "info": {
+        "nombre": "La Maria Rotisería",
+        "telefono": "+54 9 11 5555-1234",
+        "horario": "Lunes a Domingo: 11 a 22 hs",
+        "direccion": "Av. Ejemplo 1234, CABA"
+      },
+      "adminNumbers": [],
+      "dashboardUsers": [
+        {
+          "username": "admin",
+          "password": "$2b$10$DD7OGqlJlDinBTTofXkH.eC6BRra9Sk8JB6cowtOCvvJYjh3gtOeW",
+          "role": "admin",
+          "name": "Admin Rotisería"
+        }
+      ],
+      "pm2": {
+        "bot": "bot-demo-rotiseria",
+        "dashboard": "dashboard-humano-demo-rotiseria"
+      },
+      "links": {
+        "dashboard": "/index.html"
+      }
+    }
+  ]
+}

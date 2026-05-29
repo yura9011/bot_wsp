@@ -1,0 +1,50 @@
+{
+  "agents": [
+    {
+      "id": "demo-catalogo",
+      "clientId": "demo-catalogo",
+      "name": "Demo Catálogo",
+      "enabled": true,
+      "status": "active",
+      "environment": "demo",
+      "readOnly": false,
+      "features": {
+        "human_handoff": true,
+        "flowType": "catalogo"
+      },
+      "whatsappSession": "demo-catalogo-session",
+      "ports": {
+        "api": 5040,
+        "dashboard": 5041
+      },
+      "paths": {
+        "data": "data/demo-catalogo",
+        "logs": "logs/demo-catalogo",
+        "catalog": "catalogs/catalogo-catalogo.js",
+        "auth": ".wwebjs_auth"
+      },
+      "info": {
+        "nombre": "Mi Tienda",
+        "telefono": "+54 9 11 5555-7777",
+        "horario": "Lunes a Sábado 10 a 19 hs",
+        "direccion": "Calle Real 789, CABA"
+      },
+      "adminNumbers": [],
+      "dashboardUsers": [
+        {
+          "username": "admin",
+          "password": "$2b$10$DD7OGqlJlDinBTTofXkH.eC6BRra9Sk8JB6cowtOCvvJYjh3gtOeW",
+          "role": "admin",
+          "name": "Admin Catálogo"
+        }
+      ],
+      "pm2": {
+        "bot": "bot-demo-catalogo",
+        "dashboard": "dashboard-humano-demo-catalogo"
+      },
+      "links": {
+        "dashboard": "/index.html"
+      }
+    }
+  ]
+}
