@@ -105,7 +105,7 @@ app.get('/api/test', (req, res) => {
 });
 
 app.post('/api/auth/login', loginLimiter, async (req, res) => {
-  console.log('🔐 Login attempt:', req.body);
+  console.log('🔐 Login attempt');
   const { username, password } = req.body;
 
   if (!username || !password) {
@@ -114,24 +114,20 @@ app.post('/api/auth/login', loginLimiter, async (req, res) => {
   }
 
   const agent = leerConfig();
-  console.log('📋 Agent config:', agent ? 'Found' : 'Not found');
-  console.log('👥 Dashboard users:', agent?.dashboardUsers ? 'Found' : 'Not found');
-  
+
   if (!agent || !agent.dashboardUsers) {
     console.log('❌ No dashboard users configured');
     return res.status(500).json({ error: 'Configuración de usuarios no encontrada' });
   }
 
   const user = agent.dashboardUsers.find(u => u.username === username);
-  console.log('👤 User found:', user ? 'Yes' : 'No');
-  
+
   if (!user) {
     return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
   }
 
   const validPassword = await bcrypt.compare(password, user.password);
-  console.log('🔑 Password valid:', validPassword);
-  
+
   if (!validPassword) {
     return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
   }

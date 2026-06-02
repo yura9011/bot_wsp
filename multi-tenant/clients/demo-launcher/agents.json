@@ -10,7 +10,8 @@
       "readOnly": false,
       "features": {
         "human_handoff": true,
-        "flowType": "demo-launcher"
+        "flowType": "demo-launcher",
+        "replyDelayMs": 800
       },
       "whatsappSession": "demo-session",
       "ports": {
